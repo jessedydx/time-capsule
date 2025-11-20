@@ -14,7 +14,7 @@ export default function ViewCapsules() {
         address: CONTRACT_ADDRESS as `0x${string}`,
         abi: TimeCapsuleArtifact.abi as any,
         functionName: 'getUserCapsules',
-        args: [address],
+        args: [address as `0x${string}`],
         query: {
             enabled: !!address,
         }
