@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Farcaster Time Capsule",
+  title: "Time Capsule",
   description: "Store messages on-chain to be revealed in the future.",
 };
 
