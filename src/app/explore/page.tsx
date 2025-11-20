@@ -10,6 +10,25 @@ type FilterType = 'all' | 'locked' | 'unlocked';
 
 export default function ExploreCapsules() {
     const [filter, setFilter] = useState<FilterType>('all');
+    const [decryptedMessages, setDecryptedMessages] = useState<Record<number, string>>({});
+    const [isDecrypting, setIsDecrypting] = useState<Record<number, boolean>>({});
+
+    const handleDecrypt = async (index: number, messageJson: string) => {
+        try {
+            setIsDecrypting(prev => ({ ...prev, [index]: true }));
+            const { ciphertext, dataToEncryptHash, accessControlConditions } = JSON.parse(messageJson);
+
+            const { lit } = await import('../../utils/lit');
+            const decrypted = await lit.decrypt(ciphertext, dataToEncryptHash, accessControlConditions);
+
+            setDecryptedMessages(prev => ({ ...prev, [index]: decrypted }));
+        } catch (error) {
+            console.error('Decryption failed:', error);
+            alert('Failed to decrypt message. Ensure you have the right permissions.');
+        } finally {
+            setIsDecrypting(prev => ({ ...prev, [index]: false }));
+        }
+    };
 
     // Get total number of capsules
     const { data: nextCapsuleId } = useReadContract({
@@ -103,6 +122,16 @@ export default function ExploreCapsules() {
                         const isLocked = Date.now() < unlockTime;
                         const unlockDate = new Date(unlockTime).toLocaleString();
 
+                        let isEncrypted = false;
+                        try {
+                            const parsed = JSON.parse(capsule.message);
+                            if (parsed.ciphertext && parsed.dataToEncryptHash) {
+                                isEncrypted = true;
+                            }
+                        } catch (e) {
+                            // Not JSON, assume plaintext
+                        }
+
                         return (
                             <div key={index} className="bg-gray-900 border border-gray-800 rounded-xl p-6 flex flex-col gap-4 shadow-lg hover:border-gray-700 transition-colors">
                                 <div className="flex justify-between items-start">
@@ -114,11 +143,44 @@ export default function ExploreCapsules() {
 
                                 <div className="flex-grow">
                                     {isLocked ? (
-                                        <div className="h-24 flex items-center justify-center bg-black/30 rounded border border-dashed border-gray-800">
-                                            <span className="text-gray-600 text-sm">🔒 Message Hidden</span>
+                                        <div className="h-24 flex items-center justify-center bg-black/30 rounded border border-dashed border-gray-800 flex-col gap-2">
+                                            <span className="text-gray-500 text-2xl">🔒</span>
+                                            <span className="text-gray-500 text-xs font-mono">
+                                                {isEncrypted ? 'Encrypted & Time Locked' : 'Message Hidden'}
+                                            </span>
                                         </div>
                                     ) : (
-                                        <p className="text-gray-200 whitespace-pre-wrap">{capsule.message}</p>
+                                        isEncrypted ? (
+                                            decryptedMessages[index] ? (
+                                                <div className="animate-fade-in">
+                                                    <p className="text-xs text-green-400 mb-1 font-mono">Successfully Decrypted:</p>
+                                                    <p className="text-gray-200 whitespace-pre-wrap">{decryptedMessages[index]}</p>
+                                                </div>
+                                            ) : (
+                                                <div className="flex flex-col gap-3 items-center justify-center h-full py-4">
+                                                    <p className="text-gray-400 text-sm italic text-center">
+                                                        This message is encrypted with Lit Protocol.
+                                                    </p>
+                                                    <button
+                                                        onClick={() => handleDecrypt(index, capsule.message)}
+                                                        disabled={isDecrypting[index]}
+                                                        className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white text-xs font-bold py-2 px-4 rounded-full transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                                                    >
+                                                        {isDecrypting[index] ? (
+                                                            <>
+                                                                <span className="animate-spin">⚡</span> Decrypting...
+                                                            </>
+                                                        ) : (
+                                                            <>
+                                                                🔥 Decrypt Message
+                                                            </>
+                                                        )}
+                                                    </button>
+                                                </div>
+                                            )
+                                        ) : (
+                                            <p className="text-gray-200 whitespace-pre-wrap">{capsule.message}</p>
+                                        )
                                     )}
                                 </div>
 
@@ -133,7 +195,8 @@ export default function ExploreCapsules() {
                         );
                     })}
                 </div>
-            )}
+            )
+            }
         </div>
     );
 }

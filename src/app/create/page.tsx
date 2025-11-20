@@ -13,18 +13,37 @@ export default function CreateCapsule() {
 
     const { writeContract, isPending, isSuccess } = useWriteContract();
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const [isEncrypting, setIsEncrypting] = useState(false);
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!message || !unlockDate) return;
 
         const timestamp = Math.floor(new Date(unlockDate).getTime() / 1000);
 
-        writeContract({
-            address: CONTRACT_ADDRESS as `0x${string}`,
-            abi: TimeCapsuleArtifact.abi as any,
-            functionName: 'createCapsule',
-            args: [message, BigInt(timestamp)],
-        });
+        try {
+            setIsEncrypting(true);
+            // Encrypt the message using Lit Protocol
+            // We import 'lit' dynamically to avoid SSR issues if any, but 'lit.ts' uses client-side only logic mostly.
+            // However, let's import it at the top level if possible.
+            const { lit } = await import('../../utils/lit');
+            const encryptedData = await lit.encrypt(message, timestamp);
+
+            // Store the encrypted data as a JSON string
+            const messageToSend = JSON.stringify(encryptedData);
+
+            writeContract({
+                address: CONTRACT_ADDRESS as `0x${string}`,
+                abi: TimeCapsuleArtifact.abi as any,
+                functionName: 'createCapsule',
+                args: [messageToSend, BigInt(timestamp)],
+            });
+        } catch (error) {
+            console.error('Encryption failed:', error);
+            alert('Failed to encrypt message. Please try again.');
+        } finally {
+            setIsEncrypting(false);
+        }
     };
 
     return (
@@ -56,10 +75,10 @@ export default function CreateCapsule() {
 
                 <button
                     type="submit"
-                    disabled={isPending}
+                    disabled={isPending || isEncrypting}
                     className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded transition-colors disabled:opacity-50"
                 >
-                    {isPending ? 'Creating...' : 'Seal Capsule'}
+                    {isEncrypting ? 'Encrypting...' : isPending ? 'Creating...' : 'Seal Capsule'}
                 </button>
 
                 {isSuccess && (
