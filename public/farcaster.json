@@ -1,0 +1,17 @@
+{
+    "accountAssociation": {
+        "header": "",
+        "payload": "",
+        "signature": ""
+    },
+    "frame": {
+        "version": "1",
+        "name": "Time Capsule",
+        "iconUrl": "https://time-capsule-nine.vercel.app/icon.png",
+        "homeUrl": "https://time-capsule-nine.vercel.app",
+        "imageUrl": "https://time-capsule-nine.vercel.app/preview.png",
+        "buttonTitle": "Open Time Capsule",
+        "splashImageUrl": "https://time-capsule-nine.vercel.app/splash.png",
+        "splashBackgroundColor": "#000000"
+    }
+}
