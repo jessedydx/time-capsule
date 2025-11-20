@@ -38,7 +38,7 @@ export default function CreateCapsule() {
                         id="message"
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
-                        className="p-3 rounded bg-gray-800 border border-gray-700 min-h-[100px]"
+                        className="p-3 rounded bg-white text-black border border-gray-300 min-h-[100px] focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="Write your message for the future..."
                     />
                 </div>
@@ -50,7 +50,7 @@ export default function CreateCapsule() {
                         id="date"
                         value={unlockDate}
                         onChange={(e) => setUnlockDate(e.target.value)}
-                        className="p-3 rounded bg-gray-800 border border-gray-700"
+                        className="p-3 rounded bg-white text-black border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                 </div>
 
