@@ -20,7 +20,16 @@ export function Navbar() {
                 <Link href="/capsules" className="text-sm hover:text-gray-300 transition-colors">
                     My Capsules
                 </Link>
-                <ConnectButton />
+                <ConnectButton
+                    showBalance={{
+                        small: false,
+                        large: true,
+                    }}
+                    accountStatus={{
+                        small: 'avatar',
+                        large: 'full',
+                    }}
+                />
             </div>
         </nav>
     );
