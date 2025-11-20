@@ -10,7 +10,11 @@
   },
   "dependencies": {
     "@farcaster/frame-sdk": "^0.1.12",
+    "@privy-io/react-auth": "^3.7.0",
+    "@privy-io/wagmi": "^2.0.2",
     "@rainbow-me/rainbowkit": "^2.2.9",
+    "@solana-program/compute-budget": "^0.11.0",
+    "@solana/kit": "^5.0.0",
     "@tanstack/react-query": "^5.90.10",
     "dotenv": "^17.2.3",
     "next": "16.0.3",
@@ -40,6 +44,7 @@
     "solidity-coverage": "^0.8.0",
     "tailwindcss": "^4",
     "typechain": "^8.3.0",
-    "typescript": "^5"
+    "typescript": "^5",
+    "why-is-node-running": "^3.2.2"
   }
 }

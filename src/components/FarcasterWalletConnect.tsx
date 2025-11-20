@@ -1,13 +1,13 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useAccount, useConnect, useDisconnect } from 'wagmi';
+import { useAccount } from 'wagmi';
 import { useFarcaster } from './FarcasterProvider';
 import sdk from '@farcaster/frame-sdk';
 
 export function FarcasterWalletConnect() {
     const { isSDKLoaded } = useFarcaster();
-    const { isConnected, address } = useAccount();
+    const { isConnected } = useAccount();
     const [farcasterAddress, setFarcasterAddress] = useState<string | null>(null);
 
     useEffect(() => {
@@ -16,7 +16,7 @@ export function FarcasterWalletConnect() {
                 try {
                     const context = await sdk.context;
                     // Get user's connected address from Farcaster context
-                    const walletAddress = context.user?.custody || context.user?.verifications?.[0];
+                    const walletAddress = (context.user as any)?.custody || (context.user as any)?.verifications?.[0];
                     if (walletAddress) {
                         setFarcasterAddress(walletAddress);
                     }
@@ -32,13 +32,16 @@ export function FarcasterWalletConnect() {
     // If we have a Farcaster address and not connected, show info
     if (isSDKLoaded && farcasterAddress && !isConnected) {
         return (
-            <div className="fixed bottom-4 right-4 bg-blue-600 text-white p-4 rounded-lg shadow-lg max-w-sm">
-                <p className="text-sm mb-2">
-                    🎯 You're using Farcaster! Connect your wallet to create capsules.
+            <div className="fixed bottom-4 right-4 bg-blue-600 text-white p-4 rounded-lg shadow-lg max-w-sm z-50 animate-fade-in-up">
+                <p className="text-sm mb-2 font-bold">
+                    🎯 Farcaster User Detected
                 </p>
-                <p className="text-xs opacity-80">
-                    Farcaster Address: {farcasterAddress.slice(0, 6)}...{farcasterAddress.slice(-4)}
+                <p className="text-xs opacity-90 mb-3">
+                    Please connect your wallet to create capsules.
                 </p>
+                <div className="text-xs bg-black/20 p-2 rounded font-mono">
+                    {farcasterAddress.slice(0, 6)}...{farcasterAddress.slice(-4)}
+                </div>
             </div>
         );
     }
