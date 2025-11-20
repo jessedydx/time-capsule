@@ -14,6 +14,9 @@ export function Navbar() {
                 <Link href="/create" className="text-sm hover:text-gray-300 transition-colors">
                     Create
                 </Link>
+                <Link href="/explore" className="text-sm hover:text-gray-300 transition-colors">
+                    Explore
+                </Link>
                 <Link href="/capsules" className="text-sm hover:text-gray-300 transition-colors">
                     My Capsules
                 </Link>
