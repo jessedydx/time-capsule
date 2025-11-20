@@ -1,0 +1,17 @@
+{
+    "accountAssociation": {
+        "header": "",
+        "payload": "",
+        "signature": ""
+    },
+    "frame": {
+        "version": "1",
+        "name": "Time Capsule",
+        "iconUrl": "https://time-capsule-git-main-jesses-projects-69736c12.vercel.app/icon.png",
+        "homeUrl": "https://time-capsule-git-main-jesses-projects-69736c12.vercel.app",
+        "imageUrl": "https://time-capsule-git-main-jesses-projects-69736c12.vercel.app/preview.png",
+        "buttonTitle": "Open Time Capsule",
+        "splashImageUrl": "https://time-capsule-git-main-jesses-projects-69736c12.vercel.app/splash.png",
+        "splashBackgroundColor": "#000000"
+    }
+}
