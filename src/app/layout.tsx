@@ -4,6 +4,7 @@ import "./globals.css";
 import { Providers } from "../components/Providers";
 import { Navbar } from "../components/Navbar";
 import { FarcasterProvider } from "../components/FarcasterProvider";
+import { FarcasterWalletConnect } from "../components/FarcasterWalletConnect";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,6 +33,7 @@ export default function RootLayout({
       >
         <Providers>
           <FarcasterProvider>
+            <FarcasterWalletConnect />
             <Navbar />
             {children}
           </FarcasterProvider>
