@@ -66,8 +66,8 @@ export default function ExploreCapsules() {
                 <button
                     onClick={() => setFilter('all')}
                     className={`px-4 py-2 rounded-lg transition-colors ${filter === 'all'
-                            ? 'bg-blue-600 text-white'
-                            : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
                         }`}
                 >
                     All ({capsules.length})
@@ -75,8 +75,8 @@ export default function ExploreCapsules() {
                 <button
                     onClick={() => setFilter('locked')}
                     className={`px-4 py-2 rounded-lg transition-colors ${filter === 'locked'
-                            ? 'bg-red-600 text-white'
-                            : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                        ? 'bg-red-600 text-white'
+                        : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
                         }`}
                 >
                     Locked
@@ -84,8 +84,8 @@ export default function ExploreCapsules() {
                 <button
                     onClick={() => setFilter('unlocked')}
                     className={`px-4 py-2 rounded-lg transition-colors ${filter === 'unlocked'
-                            ? 'bg-green-600 text-white'
-                            : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                        ? 'bg-green-600 text-white'
+                        : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
                         }`}
                 >
                     Unlocked
@@ -127,7 +127,7 @@ export default function ExploreCapsules() {
                                     <p className="text-sm font-mono text-gray-400 truncate">{capsule.creator}</p>
 
                                     <p className="text-xs text-gray-500 mt-3">Unlock Time</p>
-                                    <p className="text-sm font-medium">{unlockDate}</p>
+                                    <p className="text-sm font-medium text-white">{unlockDate}</p>
                                 </div>
                             </div>
                         );
