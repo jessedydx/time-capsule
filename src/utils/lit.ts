@@ -18,12 +18,54 @@ export class Lit {
         }
     }
 
-    async encrypt(message: string, unlockTime: number) {
+    async encrypt(message: string, unlockTime: number, recipients: string[] = [], isPublic: boolean = true) {
         await this.connect();
 
-        // Access Control Condition: Check timestamp
-        const accessControlConditions = [
-            {
+        let accessControlConditions;
+
+        if (isPublic) {
+            // Public capsule: Time-based access only
+            accessControlConditions = [
+                {
+                    contractAddress: '',
+                    standardContractType: '',
+                    chain: this.chain,
+                    method: 'eth_getBlockByNumber',
+                    parameters: ['latest'],
+                    returnValueTest: {
+                        comparator: '>=',
+                        value: unlockTime.toString(),
+                    },
+                },
+            ];
+        } else {
+            // Private capsule: Time-based + Recipient check
+            // Build OR conditions for all recipients
+            const recipientConditions = recipients.map((recipient, index) => ({
+                conditionType: 'evmBasic',
+                contractAddress: '',
+                standardContractType: '',
+                chain: this.chain,
+                method: '',
+                parameters: [':userAddress'],
+                returnValueTest: {
+                    comparator: '=',
+                    value: recipient.toLowerCase(),
+                },
+            }));
+
+            // Add OR operators between recipient conditions
+            const recipientConditionsWithOperators: any[] = [];
+            recipientConditions.forEach((condition, index) => {
+                recipientConditionsWithOperators.push(condition);
+                if (index < recipientConditions.length - 1) {
+                    recipientConditionsWithOperators.push({ operator: 'or' });
+                }
+            });
+
+            // Time condition
+            const timeCondition = {
+                conditionType: 'evmBasic',
                 contractAddress: '',
                 standardContractType: '',
                 chain: this.chain,
@@ -33,8 +75,15 @@ export class Lit {
                     comparator: '>=',
                     value: unlockTime.toString(),
                 },
-            },
-        ];
+            };
+
+            // Combine: (recipient1 OR recipient2 OR ...) AND time
+            accessControlConditions = [
+                ...recipientConditionsWithOperators,
+                { operator: 'and' },
+                timeCondition,
+            ];
+        }
 
         // Encrypt the message
         const { ciphertext, dataToEncryptHash } = await this.client.encrypt({

@@ -2,41 +2,78 @@
 
 import { useState } from 'react';
 import { useWriteContract } from 'wagmi';
-import { parseEther } from 'viem';
+import { isAddress } from 'viem';
 import TimeCapsuleArtifact from '../../abis/TimeCapsule.json';
 
-const CONTRACT_ADDRESS = '0x100ddE00826C83BD9243F0AF0DE47769c40fB5d2';
+const CONTRACT_ADDRESS = '0x19B512eb920Ee17551540C017EA75dfc7950b098';
+const MAX_RECIPIENTS = 5;
 
 export default function CreateCapsule() {
     const [message, setMessage] = useState('');
     const [unlockDate, setUnlockDate] = useState('');
+    const [isPublic, setIsPublic] = useState(true);
+    const [recipients, setRecipients] = useState<string[]>([]);
+    const [newRecipient, setNewRecipient] = useState('');
+    const [recipientError, setRecipientError] = useState('');
 
     const { writeContract, isPending, isSuccess } = useWriteContract();
 
     const [isEncrypting, setIsEncrypting] = useState(false);
 
+    const addRecipient = () => {
+        setRecipientError('');
+
+        if (!newRecipient.trim()) {
+            setRecipientError('Please enter an address');
+            return;
+        }
+
+        if (!isAddress(newRecipient)) {
+            setRecipientError('Invalid Ethereum address');
+            return;
+        }
+
+        if (recipients.includes(newRecipient.toLowerCase())) {
+            setRecipientError('Address already added');
+            return;
+        }
+
+        if (recipients.length >= MAX_RECIPIENTS) {
+            setRecipientError(`Maximum ${MAX_RECIPIENTS} recipients allowed`);
+            return;
+        }
+
+        setRecipients([...recipients, newRecipient.toLowerCase()]);
+        setNewRecipient('');
+    };
+
+    const removeRecipient = (address: string) => {
+        setRecipients(recipients.filter(r => r !== address));
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!message || !unlockDate) return;
+
+        if (!isPublic && recipients.length === 0) {
+            setRecipientError('Private capsules must have at least one recipient');
+            return;
+        }
 
         const timestamp = Math.floor(new Date(unlockDate).getTime() / 1000);
 
         try {
             setIsEncrypting(true);
-            // Encrypt the message using Lit Protocol
-            // We import 'lit' dynamically to avoid SSR issues if any, but 'lit.ts' uses client-side only logic mostly.
-            // However, let's import it at the top level if possible.
             const { lit } = await import('../../utils/lit');
-            const encryptedData = await lit.encrypt(message, timestamp);
+            const encryptedData = await lit.encrypt(message, timestamp, recipients, isPublic);
 
-            // Store the encrypted data as a JSON string
             const messageToSend = JSON.stringify(encryptedData);
 
             writeContract({
                 address: CONTRACT_ADDRESS as `0x${string}`,
                 abi: TimeCapsuleArtifact.abi as any,
                 functionName: 'createCapsule',
-                args: [messageToSend, BigInt(timestamp)],
+                args: [messageToSend, BigInt(timestamp), recipients, isPublic],
             });
         } catch (error) {
             console.error('Encryption failed:', error);
@@ -50,7 +87,8 @@ export default function CreateCapsule() {
         <div className="min-h-screen flex flex-col items-center justify-center p-8 gap-8">
             <h1 className="text-4xl font-bold">Create Time Capsule</h1>
 
-            <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full max-w-md">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-6 w-full max-w-md">
+                {/* Message Input */}
                 <div className="flex flex-col gap-2">
                     <label htmlFor="message" className="text-sm font-medium">Message</label>
                     <textarea
@@ -62,6 +100,7 @@ export default function CreateCapsule() {
                     />
                 </div>
 
+                {/* Unlock Date */}
                 <div className="flex flex-col gap-2">
                     <label htmlFor="date" className="text-sm font-medium">Unlock Date</label>
                     <input
@@ -72,6 +111,85 @@ export default function CreateCapsule() {
                         className="p-3 rounded bg-white text-black border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                 </div>
+
+                {/* Public/Private Toggle */}
+                <div className="flex flex-col gap-3 p-4 bg-gray-900 border border-gray-800 rounded-lg">
+                    <label className="text-sm font-medium">Privacy</label>
+                    <div className="flex gap-4">
+                        <button
+                            type="button"
+                            onClick={() => setIsPublic(true)}
+                            className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all ${isPublic
+                                ? 'bg-blue-600 text-white'
+                                : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                                }`}
+                        >
+                            🌍 Public
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setIsPublic(false)}
+                            className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all ${!isPublic
+                                ? 'bg-purple-600 text-white'
+                                : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                                }`}
+                        >
+                            🔒 Private
+                        </button>
+                    </div>
+                    <p className="text-xs text-gray-500">
+                        {isPublic ? 'Anyone can view after unlock time' : 'Only selected recipients can view'}
+                    </p>
+                </div>
+
+                {/* Recipients (only show for private) */}
+                {!isPublic && (
+                    <div className="flex flex-col gap-3 p-4 bg-purple-900/20 border border-purple-800 rounded-lg">
+                        <label className="text-sm font-medium">Recipients ({recipients.length}/{MAX_RECIPIENTS})</label>
+
+                        {/* Add Recipient Input */}
+                        <div className="flex gap-2">
+                            <input
+                                type="text"
+                                value={newRecipient}
+                                onChange={(e) => setNewRecipient(e.target.value)}
+                                onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addRecipient())}
+                                placeholder="0x..."
+                                className="flex-1 p-2 rounded bg-white text-black border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            />
+                            <button
+                                type="button"
+                                onClick={addRecipient}
+                                disabled={recipients.length >= MAX_RECIPIENTS}
+                                className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                Add
+                            </button>
+                        </div>
+
+                        {recipientError && (
+                            <p className="text-xs text-red-400">{recipientError}</p>
+                        )}
+
+                        {/* Recipients List */}
+                        {recipients.length > 0 && (
+                            <div className="flex flex-col gap-2 mt-2">
+                                {recipients.map((addr) => (
+                                    <div key={addr} className="flex items-center justify-between p-2 bg-gray-900 rounded border border-gray-800">
+                                        <span className="text-xs font-mono truncate">{addr}</span>
+                                        <button
+                                            type="button"
+                                            onClick={() => removeRecipient(addr)}
+                                            className="ml-2 text-red-400 hover:text-red-300 text-sm"
+                                        >
+                                            ✕
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                )}
 
                 <button
                     type="submit"
