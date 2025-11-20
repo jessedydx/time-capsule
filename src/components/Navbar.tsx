@@ -22,12 +22,12 @@ export function Navbar() {
                 </Link>
                 <ConnectButton
                     showBalance={{
-                        small: false,
-                        large: true,
+                        smallScreen: false,
+                        largeScreen: true,
                     }}
                     accountStatus={{
-                        small: 'avatar',
-                        large: 'full',
+                        smallScreen: 'avatar',
+                        largeScreen: 'full',
                     }}
                 />
             </div>
