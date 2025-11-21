@@ -158,7 +158,7 @@ Expiration Time: ${expirationTime}`;
         });
 
         // Convert Uint8Array to string
-        return new TextDecoder().decode(decryptedData as unknown as Uint8Array);
+        return new TextDecoder().decode(decryptedData.decryptedData);
     }
 }
 
