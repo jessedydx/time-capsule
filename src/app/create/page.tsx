@@ -79,10 +79,19 @@ export default function CreateCapsule() {
             const { lit } = await import('../../utils/lit');
             const encryptedData = await lit.encrypt(message, timestamp, recipients, isPublic);
             console.log('Encryption successful');
+            console.log('encryptedData:', encryptedData);
 
             const messageToSend = JSON.stringify(encryptedData);
+            console.log('messageToSend length:', messageToSend.length);
+            console.log('messageToSend preview:', messageToSend.substring(0, 200));
 
             console.log('Writing to contract...');
+            console.log('Contract args:', {
+                message: messageToSend.substring(0, 100) + '...',
+                timestamp,
+                recipients,
+                isPublic
+            });
             writeContract({
                 address: CONTRACT_ADDRESS as `0x${string}`,
                 abi: TimeCapsuleArtifact.abi as any,

@@ -92,8 +92,11 @@ export class Lit {
             accessControlConditions,
         });
 
+        // Convert ciphertext to base64 string for storage
+        const ciphertextString = Buffer.from(ciphertext).toString('base64');
+
         return {
-            ciphertext,
+            ciphertext: ciphertextString,
             dataToEncryptHash,
             accessControlConditions,
         };
@@ -102,8 +105,11 @@ export class Lit {
     async decrypt(ciphertext: string, dataToEncryptHash: string, accessControlConditions: any[]): Promise<string> {
         await this.connect();
 
+        // Convert base64 string back to Uint8Array
+        const ciphertextUint8Array = Uint8Array.from(Buffer.from(ciphertext, 'base64'));
+
         const decryptedData = await this.client.decrypt({
-            ciphertext,
+            ciphertext: ciphertextUint8Array as any,
             dataToEncryptHash,
             accessControlConditions,
             chain: this.chain,
