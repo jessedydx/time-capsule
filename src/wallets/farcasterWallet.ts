@@ -14,25 +14,18 @@ export const farcasterWallet = (): Wallet => ({
         mobile: 'https://warpcast.com',
         qrCode: 'https://warpcast.com',
     },
-    installed: async () => {
-        try {
-            // Only show as installed if we're in Farcaster context
-            const context = await sdk.context;
-            return !!context.user;
-        } catch {
-            return false;
-        }
-    },
     createConnector: (walletDetails) => {
         return createConnector((config) => ({
+            // @ts-ignore - Farcaster SDK provider type compatibility
             ...injected({
-                target: () => {
-                    // Return the Farcaster SDK provider directly
-                    return {
-                        id: 'farcaster',
-                        name: 'Farcaster Wallet',
-                        provider: sdk.wallet.ethProvider,
-                    };
+                target: async () => {
+                    try {
+                        const provider = await sdk.wallet.ethProvider;
+                        return provider;
+                    } catch (error) {
+                        console.error('Failed to get Farcaster eth provider:', error);
+                        return undefined;
+                    }
                 },
             })(config),
             ...walletDetails,
