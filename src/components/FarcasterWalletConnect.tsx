@@ -34,7 +34,7 @@ export function FarcasterWalletConnect() {
         return (
             <div className="fixed bottom-4 right-4 bg-blue-600 text-white p-4 rounded-lg shadow-lg max-w-sm z-50 animate-fade-in-up">
                 <p className="text-sm mb-2 font-bold">
-                    🎯 Farcaster User Detected
+                    ⬣ Farcaster User Detected
                 </p>
                 <p className="text-xs opacity-90 mb-3">
                     Please connect your wallet to create capsules.

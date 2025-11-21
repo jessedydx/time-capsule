@@ -7,7 +7,7 @@
     "frame": {
         "version": "1",
         "name": "Time Capsule",
-        "iconUrl": "https://time-capsule-phi-red.vercel.app/icon.png",
+        "iconUrl": "https://time-capsule-phi-red.vercel.app/icon.png?v=3",
         "homeUrl": "https://time-capsule-phi-red.vercel.app",
         "imageUrl": "https://time-capsule-phi-red.vercel.app/preview.png",
         "buttonTitle": "Open Time Capsule",

@@ -5,11 +5,10 @@ export default function Home() {
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
         <h1 className="text-5xl font-bold text-center sm:text-left text-black">
-          Farcaster Time Capsule
+          Time Capsule
         </h1>
-        <p className="text-xl text-center sm:text-left max-w-2xl text-gray-700">
-          Write a message to the future. Store it on the Base blockchain.
-          It will remain locked until the date you choose.
+        <p className="text-base text-center sm:text-left max-w-2xl text-gray-700">
+          The internet forgets. Blockchain remembers. Lock a secret for the future you or someone special. Secured by smart contracts on Base.
         </p>
 
         <div className="flex gap-4 items-center flex-col sm:flex-row">
