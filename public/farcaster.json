@@ -1,17 +1,18 @@
 {
     "accountAssociation": {
-        "header": "",
-        "payload": "",
-        "signature": ""
+        "header": "eyJmaWQiOjMyODk5NywidHlwZSI6ImF1dGgiLCJrZXkiOiIweDMwNWMxZUVCNDAxNTI2RTlkYTgyRGZkMTBBQ2UxMDNGNkM1ODVlNTQifQ",
+        "payload": "eyJkb21haW4iOiJ0aW1lY2Fwc3VsZXMuYXBwIn0",
+        "signature": "1Syh7NpKEVpL/9Sl+FAvVipvdAfJrlsUlLaL1IYYO9EQL79NIH0WHhrs2+tP67TlmHWVEwr4hsAj+IqIOP6vORw="
     },
     "frame": {
         "version": "1",
         "name": "Time Capsule",
-        "iconUrl": "https://time-capsule-szjx.vercel.app/icon.png?v=3",
-        "homeUrl": "https://time-capsule-szjx.vercel.app",
-        "imageUrl": "https://time-capsule-szjx.vercel.app/preview.png?v=2",
+        "iconUrl": "https://timecapsules.app/icon.png",
+        "homeUrl": "https://timecapsules.app",
+        "imageUrl": "https://timecapsules.app/preview.png",
         "buttonTitle": "Open Time Capsule",
-        "splashImageUrl": "https://time-capsule-szjx.vercel.app/splash.png?v=2",
-        "splashBackgroundColor": "#ffffff"
+        "splashImageUrl": "https://timecapsules.app/splash.png",
+        "splashBackgroundColor": "#ffffff",
+        "webhookUrl": "https://timecapsules.app/api/webhook"
     }
 }

@@ -20,6 +20,22 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Time Capsules",
   description: "Store messages on-chain to be revealed in the future.",
+  other: {
+    "fc:frame": JSON.stringify({
+      version: "next",
+      imageUrl: "https://timecapsules.app/preview.png",
+      button: {
+        title: "Open Time Capsule",
+        action: {
+          type: "launch_frame",
+          name: "Time Capsule",
+          url: "https://timecapsules.app",
+          splashImageUrl: "https://timecapsules.app/splash.png",
+          splashBackgroundColor: "#ffffff"
+        }
+      }
+    })
+  }
 };
 
 export default function RootLayout({
