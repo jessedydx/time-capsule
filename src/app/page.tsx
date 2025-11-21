@@ -1,4 +1,33 @@
 import Link from "next/link";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Time Capsules - Lock Messages for the Future",
+  description: "Create time-locked encrypted messages on Base blockchain. Your message is encrypted and stored on-chain, remaining unreadable until the exact date you choose.",
+  other: {
+    "fc:frame": "vNext",
+    "fc:frame:image": "https://timecapsules.app/preview.png",
+    "fc:frame:button:1": "Launch Time Capsules",
+    "fc:frame:button:1:action": "link",
+    "fc:frame:button:1:target": "https://timecapsules.app",
+    "fc:frame:image:aspect_ratio": "1.91:1"
+  },
+  openGraph: {
+    title: "Time Capsules",
+    description: "Lock messages for the future on Base blockchain",
+    images: [{
+      url: "https://timecapsules.app/preview.png",
+      width: 1200,
+      height: 630
+    }]
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Time Capsules",
+    description: "Lock messages for the future on Base blockchain",
+    images: ["https://timecapsules.app/preview.png"]
+  }
+};
 
 export default function Home() {
   return (
