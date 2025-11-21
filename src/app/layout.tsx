@@ -20,6 +20,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Time Capsules",
   description: "Store messages on-chain to be revealed in the future.",
+  icons: {
+    icon: '/icon.png',
+    shortcut: '/icon.png',
+    apple: '/icon.png',
+  },
   other: {
     "fc:frame": "vNext",
     "fc:frame:image": "https://timecapsules.app/preview.png",
