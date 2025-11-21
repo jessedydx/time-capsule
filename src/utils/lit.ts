@@ -110,8 +110,25 @@ export class Lit {
         const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
         const address = accounts[0];
 
-        // Create message to sign
-        const messageToSign = `I am signing this message to decrypt data with Lit Protocol`;
+        // Generate SIWE message
+        const domain = window.location.host;
+        const origin = window.location.origin;
+        const statement = "Sign this message to decrypt data with Lit Protocol";
+        const nonce = await this.client.getLatestBlockhash();
+        const issuedAt = new Date().toISOString();
+        const version = "1";
+        const chainId = 8453; // Base mainnet
+
+        const messageToSign = `${domain} wants you to sign in with your Ethereum account:
+${address}
+
+${statement}
+
+URI: ${origin}
+Version: ${version}
+Chain ID: ${chainId}
+Nonce: ${nonce}
+Issued At: ${issuedAt}`;
 
         // @ts-ignore
         const signature = await window.ethereum.request({
