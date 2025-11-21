@@ -1,4 +1,5 @@
 import { LitNodeClient } from '@lit-protocol/lit-node-client';
+import { checkAndSignAuthMessage } from '@lit-protocol/auth-helpers';
 
 export class Lit {
     private client: LitNodeClient;
@@ -105,8 +106,11 @@ export class Lit {
     async decrypt(ciphertext: string, dataToEncryptHash: string, accessControlConditions: any[]): Promise<string> {
         await this.connect();
 
-        // Get authentication signature from wallet - user will be prompted to sign
-        const authSig = await this.client.checkAndSignAuthMessage({ chain: this.chain });
+        // Get authentication signature from MetaMask
+        const authSig = await checkAndSignAuthMessage({
+            chain: this.chain,
+            nonce: await this.client.getLatestBlockhash(),
+        });
 
         // Convert base64 string back to Uint8Array
         const ciphertextUint8Array = Uint8Array.from(Buffer.from(ciphertext, 'base64'));
