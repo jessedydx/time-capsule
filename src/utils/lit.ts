@@ -117,6 +117,7 @@ export class Lit {
         const statement = "Sign this message to decrypt data with Lit Protocol";
         const nonce = await this.client.getLatestBlockhash();
         const issuedAt = new Date().toISOString();
+        const expirationTime = new Date(Date.now() + 1000 * 60 * 60 * 24).toISOString(); // 24 hours
         const version = "1";
         const chainId = 8453; // Base mainnet
 
@@ -129,7 +130,8 @@ URI: ${origin}
 Version: ${version}
 Chain ID: ${chainId}
 Nonce: ${nonce}
-Issued At: ${issuedAt}`;
+Issued At: ${issuedAt}
+Expiration Time: ${expirationTime}`;
 
         // @ts-ignore
         const signature = await window.ethereum.request({
