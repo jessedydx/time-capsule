@@ -1,17 +1,7 @@
 {
     "accountAssociation": {
-        "header": "eyJmaWQiOjMyODk5NywidHlwZSI6ImF1dGgiLCJrZXkiOiIweDMwNWMxZUVCNDAxNTI2RTlkYTgyRGZkMTBBQ2UxMDNGNkM1ODVlNTQifQ",
-        "payload": "UPDATED_PAYLOAD_NEEDED",
-        "signature": "UPDATED_SIGNATURE_NEEDED"
-    },
-    "frame": {
-        "version": "1",
-        "name": "Time Capsule",
-        "iconUrl": "https://timecapsules.app/icon.png?v=4",
-        "homeUrl": "https://timecapsules.app",
-        "imageUrl": "https://timecapsules.app/preview.png?v=4",
-        "buttonTitle": "Open Time Capsule",
-        "splashImageUrl": "https://timecapsules.app/splash.png?v=4",
-        "splashBackgroundColor": "#ffffff"
+        "header": "eyJmaWQiOjMyODk5NywidHlwZSI6ImN1c3RvZHkiLCJrZXkiOiIweDk5OGY5MjI5ZjQxOTAzQjM1N2ZGQURmNjI1MWNkODExNzNBOTEwMjMifQ",
+        "payload": "eyJkb21haW4iOiJ0aW1lY2Fwc3VsZXMuYXBwIn0",
+        "signature": "PAsLKsUJLMEGa8XXZ04NQXU8ZNIC9aAQ72SDis+PSVthob1B2GNcqtYyqKmA9oBhCKdeEoVd4a1bozZNJNheTBw="
     }
 }
