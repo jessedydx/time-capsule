@@ -105,6 +105,21 @@ export class Lit {
     async decrypt(ciphertext: string, dataToEncryptHash: string, accessControlConditions: any[]): Promise<string> {
         await this.connect();
 
+        // Get authentication signature from wallet
+        const authSig = await this.client.getSessionSigs({
+            chain: this.chain,
+            expiration: new Date(Date.now() + 1000 * 60 * 60 * 24).toISOString(), // 24 hours
+            resourceAbilityRequests: [
+                {
+                    resource: {
+                        resource: '*',
+                        resourcePrefix: 'lit-accesscontrolcondition',
+                    },
+                    ability: 'access-control-condition-decryption',
+                },
+            ],
+        });
+
         // Convert base64 string back to Uint8Array
         const ciphertextUint8Array = Uint8Array.from(Buffer.from(ciphertext, 'base64'));
 
@@ -112,6 +127,7 @@ export class Lit {
             ciphertext: ciphertextUint8Array as any,
             dataToEncryptHash,
             accessControlConditions,
+            sessionSigs: authSig,
             chain: this.chain,
         });
 
