@@ -16,8 +16,7 @@ export const farcasterWallet = (): Wallet => ({
     },
     createConnector: (walletDetails) => {
         return createConnector((config) => ({
-            // @ts-ignore - Farcaster SDK provider type compatibility
-            ...injected({
+            ...(injected({
                 target: async () => {
                     try {
                         const provider = await sdk.wallet.ethProvider;
@@ -27,7 +26,7 @@ export const farcasterWallet = (): Wallet => ({
                         return undefined;
                     }
                 },
-            })(config),
+            })(config) as any),
             ...walletDetails,
         }));
     },
