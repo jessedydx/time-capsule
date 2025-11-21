@@ -94,7 +94,7 @@ export default function ViewCapsules() {
     if (!address) {
         return (
             <div className="min-h-screen flex items-center justify-center">
-                <p className="text-xl">Please connect your wallet to view your capsules.</p>
+                <p className="text-xl text-gray-700">Please connect your wallet to view your capsules.</p>
             </div>
         );
     }
@@ -102,7 +102,7 @@ export default function ViewCapsules() {
     if (isLoading) {
         return (
             <div className="min-h-screen flex items-center justify-center">
-                <p className="text-xl">Loading capsules...</p>
+                <p className="text-xl text-gray-700">Loading capsules...</p>
             </div>
         );
     }
@@ -111,7 +111,7 @@ export default function ViewCapsules() {
 
     return (
         <div className="min-h-screen p-8 flex flex-col gap-8 items-center">
-            <h1 className="text-4xl font-bold">My Time Capsules</h1>
+            <h1 className="text-4xl font-bold text-black mt-8">My Time Capsules</h1>
 
             {/* Tabs */}
             <div className="flex gap-4">
@@ -119,7 +119,7 @@ export default function ViewCapsules() {
                     onClick={() => setTab('created')}
                     className={`px-6 py-3 rounded-lg font-medium transition-all ${tab === 'created'
                         ? 'bg-blue-600 text-white'
-                        : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                        : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-100'
                         }`}
                 >
                     📝 Created by Me ({(createdIds as bigint[] || []).length})
@@ -128,7 +128,7 @@ export default function ViewCapsules() {
                     onClick={() => setTab('received')}
                     className={`px-6 py-3 rounded-lg font-medium transition-all ${tab === 'received'
                         ? 'bg-purple-600 text-white'
-                        : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                        : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-100'
                         }`}
                 >
                     📬 Sent to Me ({(receivedIds as bigint[] || []).length})
@@ -136,7 +136,7 @@ export default function ViewCapsules() {
             </div>
 
             {capsules.length === 0 ? (
-                <p className="text-gray-400">
+                <p className="text-gray-600">
                     {tab === 'created'
                         ? "You haven't created any capsules yet."
                         : "No capsules have been sent to you yet."}
@@ -154,15 +154,15 @@ export default function ViewCapsules() {
                         const decryptedMessage = decryptedMessages[capsuleId];
 
                         return (
-                            <div key={index} className="bg-gray-900 border border-gray-800 rounded-xl p-6 flex flex-col gap-4 shadow-lg hover:border-gray-700 transition-colors">
+                            <div key={index} className="bg-white border border-gray-300 rounded-xl p-6 flex flex-col gap-4 shadow-lg hover:border-gray-400 transition-colors">
                                 <div className="flex justify-between items-start">
-                                    <span className="text-xs font-mono text-gray-500">ID: {capsuleId}</span>
+                                    <span className="text-xs font-mono text-gray-600">ID: {capsuleId}</span>
                                     <div className="flex gap-2">
-                                        <span className={`px-2 py-1 rounded text-xs font-bold ${isLocked ? 'bg-red-900/50 text-red-200' : 'bg-green-900/50 text-green-200'
+                                        <span className={`px-2 py-1 rounded text-xs font-bold ${isLocked ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'
                                             }`}>
                                             {isLocked ? 'LOCKED' : 'UNLOCKED'}
                                         </span>
-                                        <span className={`px-2 py-1 rounded text-xs font-bold ${capsule.isPublic ? 'bg-blue-900/50 text-blue-200' : 'bg-purple-900/50 text-purple-200'
+                                        <span className={`px-2 py-1 rounded text-xs font-bold ${capsule.isPublic ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700'
                                             }`}>
                                             {capsule.isPublic ? '🌍' : '🔒'}
                                         </span>
@@ -171,19 +171,19 @@ export default function ViewCapsules() {
 
                                 <div className="flex-grow">
                                     {isLocked ? (
-                                        <div className="h-24 flex flex-col items-center justify-center bg-black/30 rounded border border-dashed border-gray-800 gap-2">
+                                        <div className="h-24 flex flex-col items-center justify-center bg-gray-100 rounded border border-dashed border-gray-300 gap-2">
                                             <span className="text-gray-600 text-sm">🔒 Message Encrypted</span>
-                                            <span className="text-gray-700 text-xs">Protected by Lit Protocol</span>
+                                            <span className="text-gray-500 text-xs">Protected by Lit Protocol</span>
                                         </div>
                                     ) : decryptedMessage ? (
-                                        <p className="text-gray-200 whitespace-pre-wrap">{decryptedMessage}</p>
+                                        <p className="text-gray-800 whitespace-pre-wrap">{decryptedMessage}</p>
                                     ) : (
                                         <button
                                             onClick={() => handleDecrypt(capsule)}
                                             disabled={isDecrypting}
-                                            className="w-full h-24 flex items-center justify-center bg-blue-900/30 hover:bg-blue-900/50 rounded border border-blue-800 transition-colors disabled:opacity-50"
+                                            className="w-full h-24 flex items-center justify-center bg-blue-50 hover:bg-blue-100 rounded border border-blue-300 transition-colors disabled:opacity-50"
                                         >
-                                            <span className="text-blue-200 text-sm font-medium">
+                                            <span className="text-blue-700 text-sm font-medium">
                                                 {isDecrypting ? '🔓 Decrypting...' : '🔓 Click to Reveal'}
                                             </span>
                                         </button>
@@ -192,14 +192,14 @@ export default function ViewCapsules() {
 
                                 {/* Show recipients if created by user and private */}
                                 {tab === 'created' && !capsule.isPublic && capsule.recipients?.length > 0 && (
-                                    <div className="pt-2 border-t border-gray-800">
-                                        <p className="text-xs text-gray-500">Recipients ({capsule.recipients.length})</p>
+                                    <div className="pt-2 border-t border-gray-300">
+                                        <p className="text-xs text-gray-600">Recipients ({capsule.recipients.length})</p>
                                         <div className="flex flex-col gap-1 mt-1">
                                             {capsule.recipients.slice(0, 2).map((r: string, i: number) => (
-                                                <p key={i} className="text-xs font-mono text-purple-400 truncate">{r}</p>
+                                                <p key={i} className="text-xs font-mono text-purple-600 truncate">{r}</p>
                                             ))}
                                             {capsule.recipients.length > 2 && (
-                                                <p className="text-xs text-gray-500">+{capsule.recipients.length - 2} more</p>
+                                                <p className="text-xs text-gray-600">+{capsule.recipients.length - 2} more</p>
                                             )}
                                         </div>
                                     </div>
@@ -207,15 +207,15 @@ export default function ViewCapsules() {
 
                                 {/* Show creator if received by user */}
                                 {tab === 'received' && (
-                                    <div className="pt-2 border-t border-gray-800">
-                                        <p className="text-xs text-gray-500">From</p>
-                                        <p className="text-xs font-mono text-gray-400 truncate">{capsule.creator}</p>
+                                    <div className="pt-2 border-t border-gray-300">
+                                        <p className="text-xs text-gray-600">From</p>
+                                        <p className="text-xs font-mono text-gray-700 truncate">{capsule.creator}</p>
                                     </div>
                                 )}
 
-                                <div className="pt-4 border-t border-gray-800">
-                                    <p className="text-xs text-gray-500">Unlock Time</p>
-                                    <p className="text-sm font-medium">{unlockDate}</p>
+                                <div className="pt-4 border-t border-gray-300">
+                                    <p className="text-xs text-gray-600">Unlock Time</p>
+                                    <p className="text-sm font-medium text-gray-800">{unlockDate}</p>
                                 </div>
                             </div>
                         );

@@ -54,7 +54,7 @@ export default function ExploreCapsules() {
     if (isLoading) {
         return (
             <div className="min-h-screen flex items-center justify-center">
-                <p className="text-xl">Loading capsules...</p>
+                <p className="text-xl text-gray-700">Loading capsules...</p>
             </div>
         );
     }
@@ -79,34 +79,34 @@ export default function ExploreCapsules() {
 
     return (
         <div className="min-h-screen p-8 flex flex-col gap-8 items-center">
-            <div className="text-center">
-                <h1 className="text-4xl font-bold">Explore Time Capsules</h1>
-                <p className="text-gray-400 mt-2">Showing only unlocked capsules</p>
+            <div className="text-center mt-8">
+                <h1 className="text-4xl font-bold text-black">Explore Time Capsules</h1>
+                <p className="text-gray-600 mt-2">Showing only unlocked capsules</p>
             </div>
 
             <div className="flex gap-4">
                 <button
                     onClick={() => setFilter('all')}
-                    className={`px-4 py-2 rounded-lg transition-colors ${filter === 'all' ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'}`}
+                    className={`px-4 py-2 rounded-lg transition-colors ${filter === 'all' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-100'}`}
                 >
                     All ({unlockedCapsules.length})
                 </button>
                 <button
                     onClick={() => setFilter('public')}
-                    className={`px-4 py-2 rounded-lg transition-colors ${filter === 'public' ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'}`}
+                    className={`px-4 py-2 rounded-lg transition-colors ${filter === 'public' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-100'}`}
                 >
                     🌍 Public ({publicCount})
                 </button>
                 <button
                     onClick={() => setFilter('private')}
-                    className={`px-4 py-2 rounded-lg transition-colors ${filter === 'private' ? 'bg-purple-600 text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'}`}
+                    className={`px-4 py-2 rounded-lg transition-colors ${filter === 'private' ? 'bg-purple-600 text-white' : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-100'}`}
                 >
                     🔒 Private ({privateCount})
                 </button>
             </div>
 
             {filteredCapsules.length === 0 ? (
-                <p className="text-gray-400">No unlocked capsules found.</p>
+                <p className="text-gray-600">No unlocked capsules found.</p>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl">
                     {filteredCapsules.map((capsule: any, index: number) => {
@@ -125,14 +125,14 @@ export default function ExploreCapsules() {
                         } catch (e) { }
 
                         return (
-                            <div key={index} className="bg-gray-900 border border-gray-800 rounded-xl p-6 flex flex-col gap-4 shadow-lg hover:border-gray-700 transition-colors">
+                            <div key={index} className="bg-white border border-gray-300 rounded-xl p-6 flex flex-col gap-4 shadow-lg hover:border-gray-400 transition-colors">
                                 <div className="flex justify-between items-start">
-                                    <span className="text-xs font-mono text-gray-500">ID: {capsule.id.toString()}</span>
+                                    <span className="text-xs font-mono text-gray-600">ID: {capsule.id.toString()}</span>
                                     <div className="flex gap-2">
-                                        <span className="px-2 py-1 rounded text-xs font-bold bg-green-900/50 text-green-200">
+                                        <span className="px-2 py-1 rounded text-xs font-bold bg-green-100 text-green-700">
                                             UNLOCKED
                                         </span>
-                                        <span className={`px-2 py-1 rounded text-xs font-bold ${capsule.isPublic ? 'bg-blue-900/50 text-blue-200' : 'bg-purple-900/50 text-purple-200'}`}>
+                                        <span className={`px-2 py-1 rounded text-xs font-bold ${capsule.isPublic ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700'}`}>
                                             {capsule.isPublic ? '🌍 PUBLIC' : '🔒 PRIVATE'}
                                         </span>
                                     </div>
@@ -142,53 +142,53 @@ export default function ExploreCapsules() {
                                     {isEncrypted ? (
                                         decryptedMessages[index] ? (
                                             <div>
-                                                <p className="text-xs text-green-400 mb-1">Decrypted:</p>
-                                                <p className="text-gray-200 whitespace-pre-wrap">{decryptedMessages[index]}</p>
+                                                <p className="text-xs text-green-700 mb-1">Decrypted:</p>
+                                                <p className="text-gray-800 whitespace-pre-wrap">{decryptedMessages[index]}</p>
                                             </div>
                                         ) : !isUserRecipient ? (
-                                            <div className="h-24 flex flex-col items-center justify-center bg-red-900/20 rounded border border-red-800 gap-2">
-                                                <span className="text-red-400 text-sm">🚫 Not Authorized</span>
+                                            <div className="h-24 flex flex-col items-center justify-center bg-red-50 rounded border border-red-300 gap-2">
+                                                <span className="text-red-600 text-sm">🚫 Not Authorized</span>
                                                 <span className="text-red-500 text-xs">You're not a recipient</span>
                                             </div>
                                         ) : (
                                             <div className="flex flex-col gap-3 items-center justify-center py-4">
-                                                <p className="text-gray-400 text-sm italic text-center">
+                                                <p className="text-gray-600 text-sm italic text-center">
                                                     Encrypted with Lit Protocol
                                                 </p>
                                                 <button
                                                     onClick={() => handleDecrypt(index, capsule.message)}
                                                     disabled={isDecrypting[index]}
-                                                    className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white text-xs font-bold py-2 px-4 rounded-full transition-all disabled:opacity-50"
+                                                    className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-2 px-4 rounded-full transition-all disabled:opacity-50"
                                                 >
                                                     {isDecrypting[index] ? '⚡ Decrypting...' : '🔥 Decrypt'}
                                                 </button>
                                             </div>
                                         )
                                     ) : (
-                                        <p className="text-gray-200 whitespace-pre-wrap">{capsule.message}</p>
+                                        <p className="text-gray-800 whitespace-pre-wrap">{capsule.message}</p>
                                     )}
                                 </div>
 
-                                <div className="pt-4 border-t border-gray-800">
-                                    <p className="text-xs text-gray-500">Creator</p>
-                                    <p className="text-sm font-mono text-gray-400 truncate">{capsule.creator}</p>
+                                <div className="pt-4 border-t border-gray-300">
+                                    <p className="text-xs text-gray-600">Creator</p>
+                                    <p className="text-sm font-mono text-gray-700 truncate">{capsule.creator}</p>
 
                                     {!capsule.isPublic && capsule.recipients?.length > 0 && (
                                         <>
-                                            <p className="text-xs text-gray-500 mt-3">Recipients ({capsule.recipients.length})</p>
+                                            <p className="text-xs text-gray-600 mt-3">Recipients ({capsule.recipients.length})</p>
                                             <div className="flex flex-col gap-1 mt-1">
                                                 {capsule.recipients.slice(0, 2).map((r: string, i: number) => (
-                                                    <p key={i} className="text-xs font-mono text-purple-400 truncate">{r}</p>
+                                                    <p key={i} className="text-xs font-mono text-purple-600 truncate">{r}</p>
                                                 ))}
                                                 {capsule.recipients.length > 2 && (
-                                                    <p className="text-xs text-gray-500">+{capsule.recipients.length - 2} more</p>
+                                                    <p className="text-xs text-gray-600">+{capsule.recipients.length - 2} more</p>
                                                 )}
                                             </div>
                                         </>
                                     )}
 
-                                    <p className="text-xs text-gray-500 mt-3">Unlocked At</p>
-                                    <p className="text-sm font-medium text-white">{unlockDate}</p>
+                                    <p className="text-xs text-gray-600 mt-3">Unlocked At</p>
+                                    <p className="text-sm font-medium text-gray-800">{unlockDate}</p>
                                 </div>
                             </div>
                         );

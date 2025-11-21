@@ -85,12 +85,12 @@ export default function CreateCapsule() {
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-center p-8 gap-8">
-            <h1 className="text-4xl font-bold">Create Time Capsule</h1>
+            <h1 className="text-4xl font-bold text-black mt-8">Create Time Capsule</h1>
 
             <form onSubmit={handleSubmit} className="flex flex-col gap-6 w-full max-w-md">
                 {/* Message Input */}
                 <div className="flex flex-col gap-2">
-                    <label htmlFor="message" className="text-sm font-medium">Message</label>
+                    <label htmlFor="message" className="text-sm font-medium text-gray-700">Message</label>
                     <textarea
                         id="message"
                         value={message}
@@ -102,7 +102,7 @@ export default function CreateCapsule() {
 
                 {/* Unlock Date */}
                 <div className="flex flex-col gap-2">
-                    <label htmlFor="date" className="text-sm font-medium">Unlock Date</label>
+                    <label htmlFor="date" className="text-sm font-medium text-gray-700">Unlock Date</label>
                     <input
                         type="datetime-local"
                         id="date"
@@ -113,15 +113,15 @@ export default function CreateCapsule() {
                 </div>
 
                 {/* Public/Private Toggle */}
-                <div className="flex flex-col gap-3 p-4 bg-gray-900 border border-gray-800 rounded-lg">
-                    <label className="text-sm font-medium">Privacy</label>
+                <div className="flex flex-col gap-3 p-4 bg-gray-50 border border-gray-300 rounded-lg">
+                    <label className="text-sm font-medium text-gray-700">Privacy</label>
                     <div className="flex gap-4">
                         <button
                             type="button"
                             onClick={() => setIsPublic(true)}
                             className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all ${isPublic
                                 ? 'bg-blue-600 text-white'
-                                : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                                : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-100'
                                 }`}
                         >
                             🌍 Public
@@ -131,21 +131,21 @@ export default function CreateCapsule() {
                             onClick={() => setIsPublic(false)}
                             className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all ${!isPublic
                                 ? 'bg-purple-600 text-white'
-                                : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                                : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-100'
                                 }`}
                         >
                             🔒 Private
                         </button>
                     </div>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-gray-600">
                         {isPublic ? 'Anyone can view after unlock time' : 'Only selected recipients can view'}
                     </p>
                 </div>
 
                 {/* Recipients (only show for private) */}
                 {!isPublic && (
-                    <div className="flex flex-col gap-3 p-4 bg-purple-900/20 border border-purple-800 rounded-lg">
-                        <label className="text-sm font-medium">Recipients ({recipients.length}/{MAX_RECIPIENTS})</label>
+                    <div className="flex flex-col gap-3 p-4 bg-purple-50 border border-purple-300 rounded-lg">
+                        <label className="text-sm font-medium text-gray-700">Recipients ({recipients.length}/{MAX_RECIPIENTS})</label>
 
                         {/* Add Recipient Input */}
                         <div className="flex gap-2">
@@ -168,19 +168,19 @@ export default function CreateCapsule() {
                         </div>
 
                         {recipientError && (
-                            <p className="text-xs text-red-400">{recipientError}</p>
+                            <p className="text-xs text-red-600">{recipientError}</p>
                         )}
 
                         {/* Recipients List */}
                         {recipients.length > 0 && (
                             <div className="flex flex-col gap-2 mt-2">
                                 {recipients.map((addr) => (
-                                    <div key={addr} className="flex items-center justify-between p-2 bg-gray-900 rounded border border-gray-800">
-                                        <span className="text-xs font-mono truncate">{addr}</span>
+                                    <div key={addr} className="flex items-center justify-between p-2 bg-white rounded border border-gray-300">
+                                        <span className="text-xs font-mono truncate text-gray-700">{addr}</span>
                                         <button
                                             type="button"
                                             onClick={() => removeRecipient(addr)}
-                                            className="ml-2 text-red-400 hover:text-red-300 text-sm"
+                                            className="ml-2 text-red-600 hover:text-red-700 text-sm"
                                         >
                                             ✕
                                         </button>
