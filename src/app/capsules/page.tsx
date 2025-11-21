@@ -65,19 +65,37 @@ export default function ViewCapsules() {
         setDecryptingIds(prev => new Set(prev).add(capsuleId));
 
         try {
+            console.log('=== DECRYPTION DEBUG ===');
+            console.log('Capsule ID:', capsuleId);
+            console.log('Capsule unlock time:', capsule.unlockTime);
+            console.log('Current time (seconds):', Math.floor(Date.now() / 1000));
+            console.log('Is locked?', Date.now() < Number(capsule.unlockTime) * 1000);
+            console.log('Raw message from contract:', capsule.message);
+
             const encryptedData = JSON.parse(capsule.message);
+            console.log('Parsed encrypted data:', encryptedData);
+            console.log('ciphertext type:', typeof encryptedData.ciphertext);
+            console.log('ciphertext length:', encryptedData.ciphertext?.length);
+            console.log('dataToEncryptHash:', encryptedData.dataToEncryptHash);
+            console.log('accessControlConditions:', encryptedData.accessControlConditions);
+
             const decryptedMessage = await lit.decrypt(
                 encryptedData.ciphertext,
                 encryptedData.dataToEncryptHash,
                 encryptedData.accessControlConditions
             );
 
+            console.log('Decrypted successfully:', decryptedMessage);
+
             setDecryptedMessages(prev => ({
                 ...prev,
                 [capsuleId]: decryptedMessage
             }));
         } catch (error) {
-            console.error('Decryption failed:', error);
+            console.error('=== DECRYPTION ERROR ===');
+            console.error('Error details:', error);
+            console.error('Error message:', (error as Error).message);
+            console.error('Error stack:', (error as Error).stack);
             setDecryptedMessages(prev => ({
                 ...prev,
                 [capsuleId]: '[Failed to decrypt - may still be locked or invalid data]'
