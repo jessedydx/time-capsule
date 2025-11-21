@@ -7,11 +7,11 @@
     "frame": {
         "version": "1",
         "name": "Time Capsule",
-        "iconUrl": "https://time-capsule-szjx.vercel.app/icon.png?v=3",
+        "iconUrl": "https://time-capsule-szjx.vercel.app/icon.png?v=4",
         "homeUrl": "https://time-capsule-szjx.vercel.app",
-        "imageUrl": "https://time-capsule-szjx.vercel.app/preview.png?v=2",
+        "imageUrl": "https://time-capsule-szjx.vercel.app/preview.png?v=4",
         "buttonTitle": "Open Time Capsule",
-        "splashImageUrl": "https://time-capsule-szjx.vercel.app/splash.png?v=2",
+        "splashImageUrl": "https://time-capsule-szjx.vercel.app/splash.png?v=4",
         "splashBackgroundColor": "#ffffff"
     }
 }
