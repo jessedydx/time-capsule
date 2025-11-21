@@ -27,11 +27,12 @@ export class Lit {
             // Public capsule: Time-based access only
             accessControlConditions = [
                 {
+                    conditionType: 'evmBasic',
                     contractAddress: '',
-                    standardContractType: '',
+                    standardContractType: 'timestamp',
                     chain: this.chain,
-                    method: 'eth_getBlockByNumber',
-                    parameters: ['latest'],
+                    method: 'timestamp',
+                    parameters: [],
                     returnValueTest: {
                         comparator: '>=',
                         value: unlockTime.toString(),
@@ -67,10 +68,10 @@ export class Lit {
             const timeCondition = {
                 conditionType: 'evmBasic',
                 contractAddress: '',
-                standardContractType: '',
+                standardContractType: 'timestamp',
                 chain: this.chain,
-                method: 'eth_getBlockByNumber',
-                parameters: ['latest'],
+                method: 'timestamp',
+                parameters: [],
                 returnValueTest: {
                     comparator: '>=',
                     value: unlockTime.toString(),
