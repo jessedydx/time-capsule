@@ -15,12 +15,9 @@ export const farcasterWallet = (): Wallet => ({
         qrCode: 'https://warpcast.com',
     },
     createConnector: (walletDetails) => {
-        return createConnector((config) => {
-            const connector = injected()(config);
-            return {
-                ...connector,
-                ...walletDetails,
-                getProvider: async () => {
+        return createConnector((config) => ({
+            ...injected({
+                target: (async () => {
                     try {
                         const provider = await sdk.wallet.ethProvider;
                         return provider;
@@ -28,8 +25,9 @@ export const farcasterWallet = (): Wallet => ({
                         console.error('Failed to get Farcaster eth provider:', error);
                         return undefined;
                     }
-                },
-            };
-        });
+                }) as any,
+            })(config),
+            ...walletDetails,
+        }));
     },
 });
