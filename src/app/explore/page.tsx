@@ -4,7 +4,7 @@ import { useReadContract, useReadContracts, useAccount } from 'wagmi';
 import TimeCapsuleArtifact from '../../abis/TimeCapsule.json';
 import { useState } from 'react';
 
-const CONTRACT_ADDRESS = '0x19B512eb920Ee17551540C017EA75dfc7950b098';
+const CONTRACT_ADDRESS = '0x20deAfbfa1C824986E4bED5E9d0A9F345650F383';
 
 type FilterType = 'all' | 'public' | 'private';
 

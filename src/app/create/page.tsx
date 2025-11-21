@@ -5,7 +5,7 @@ import { useWriteContract } from 'wagmi';
 import { isAddress } from 'viem';
 import TimeCapsuleArtifact from '../../abis/TimeCapsule.json';
 
-const CONTRACT_ADDRESS = '0x19B512eb920Ee17551540C017EA75dfc7950b098';
+const CONTRACT_ADDRESS = '0x20deAfbfa1C824986E4bED5E9d0A9F345650F383';
 const MAX_RECIPIENTS = 5;
 
 export default function CreateCapsule() {
@@ -87,7 +87,7 @@ export default function CreateCapsule() {
                 address: CONTRACT_ADDRESS as `0x${string}`,
                 abi: TimeCapsuleArtifact.abi as any,
                 functionName: 'createCapsule',
-                args: [messageToSend, BigInt(timestamp)],
+                args: [messageToSend, BigInt(timestamp), recipients, isPublic],
             });
         } catch (error) {
             console.error('Encryption or Contract call failed:', error);
