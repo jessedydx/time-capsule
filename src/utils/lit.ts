@@ -1,5 +1,4 @@
 import { LitNodeClient } from '@lit-protocol/lit-node-client';
-import { checkAndSignAuthMessage } from '@lit-protocol/auth-helpers';
 
 export class Lit {
     private client: LitNodeClient;
@@ -106,11 +105,26 @@ export class Lit {
     async decrypt(ciphertext: string, dataToEncryptHash: string, accessControlConditions: any[]): Promise<string> {
         await this.connect();
 
-        // Get authentication signature from MetaMask
-        const authSig = await checkAndSignAuthMessage({
-            chain: this.chain,
-            nonce: await this.client.getLatestBlockhash(),
+        // Get authentication signature from MetaMask manually
+        // @ts-ignore - window.ethereum exists when MetaMask is installed
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        const address = accounts[0];
+
+        // Create message to sign
+        const messageToSign = `I am signing this message to decrypt data with Lit Protocol`;
+
+        // @ts-ignore
+        const signature = await window.ethereum.request({
+            method: 'personal_sign',
+            params: [messageToSign, address],
         });
+
+        const authSig = {
+            sig: signature,
+            derivedVia: 'web3.eth.personal.sign',
+            signedMessage: messageToSign,
+            address: address,
+        };
 
         // Convert base64 string back to Uint8Array
         const ciphertextUint8Array = Uint8Array.from(Buffer.from(ciphertext, 'base64'));
