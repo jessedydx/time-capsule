@@ -1,4 +1,5 @@
 import { LitNodeClient } from '@lit-protocol/lit-node-client';
+import { getAddress } from 'viem';
 
 export class Lit {
     private client: LitNodeClient;
@@ -108,7 +109,7 @@ export class Lit {
         // Get authentication signature from MetaMask manually
         // @ts-ignore - window.ethereum exists when MetaMask is installed
         const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        const address = accounts[0];
+        const address = getAddress(accounts[0]);
 
         // Generate SIWE message
         const domain = window.location.host;
