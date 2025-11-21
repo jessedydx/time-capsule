@@ -21,20 +21,22 @@ export const metadata: Metadata = {
   title: "Time Capsules",
   description: "Store messages on-chain to be revealed in the future.",
   other: {
-    "fc:frame": JSON.stringify({
-      version: "next",
-      imageUrl: "https://timecapsules.app/preview.png",
-      button: {
-        title: "Open Time Capsule",
-        action: {
-          type: "launch_frame",
-          name: "Time Capsule",
-          url: "https://timecapsules.app",
-          splashImageUrl: "https://timecapsules.app/splash.png",
-          splashBackgroundColor: "#ffffff"
-        }
+    "fc:frame": "vNext",
+    "fc:frame:image": "https://timecapsules.app/preview.png",
+    "fc:frame:button:1": "Launch App",
+    "fc:frame:button:1:action": "link",
+    "fc:frame:button:1:target": "https://timecapsules.app"
+  },
+  openGraph: {
+    title: "Time Capsules",
+    description: "Store messages on-chain to be revealed in the future.",
+    images: [
+      {
+        url: "https://timecapsules.app/preview.png",
+        width: 1200,
+        height: 630,
       }
-    })
+    ],
   }
 };
 
