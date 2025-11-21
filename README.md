@@ -1,3 +1,16 @@
+# Time Capsules
+
+A Farcaster mini-app for creating time-locked messages on the Base blockchain.
+
+🌐 **Live App**: [https://www.timecapsules.app/](https://www.timecapsules.app/)  
+📦 **Repository**: [https://github.com/jessedydx/time-capsule](https://github.com/jessedydx/time-capsule)
+
+## About
+
+Time Capsules allows users to create encrypted messages that are locked until a specific future date. Messages are stored on the Base blockchain and encrypted using Lit Protocol for secure time-lock functionality.
+
+---
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
