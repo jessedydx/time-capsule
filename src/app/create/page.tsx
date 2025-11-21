@@ -85,7 +85,7 @@ export default function CreateCapsule() {
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-center p-8 gap-8">
-            <h1 className="text-4xl font-bold text-black mt-8">Create Time Capsule</h1>
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-cyan-400 to-teal-400 bg-clip-text text-transparent mt-8">Create Time Capsules</h1>
 
             <form onSubmit={handleSubmit} className="flex flex-col gap-6 w-full max-w-md">
                 {/* Message Input */}

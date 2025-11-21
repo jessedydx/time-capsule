@@ -111,7 +111,7 @@ export default function ViewCapsules() {
 
     return (
         <div className="min-h-screen p-8 flex flex-col gap-8 items-center">
-            <h1 className="text-4xl font-bold text-black mt-8">My Time Capsules</h1>
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-cyan-400 to-teal-400 bg-clip-text text-transparent mt-8">My Time Capsules</h1>
 
             {/* Tabs */}
             <div className="flex gap-4">

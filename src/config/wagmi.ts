@@ -10,7 +10,7 @@ import {
 const { wallets } = getDefaultWallets();
 
 export const config = getDefaultConfig({
-    appName: 'Farcaster Time Capsule',
+    appName: 'Time Capsules',
     projectId: 'f1a0f0d91349a9ef2b0c913fb0a17505',
     chains: [base],
     ssr: true,

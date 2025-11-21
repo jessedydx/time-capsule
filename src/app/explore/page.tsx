@@ -80,7 +80,7 @@ export default function ExploreCapsules() {
     return (
         <div className="min-h-screen p-8 flex flex-col gap-8 items-center">
             <div className="text-center mt-8">
-                <h1 className="text-4xl font-bold text-black">Explore Time Capsules</h1>
+                <h1 className="text-4xl font-bold bg-gradient-to-r from-cyan-400 to-teal-400 bg-clip-text text-transparent">Explore Time Capsules</h1>
                 <p className="text-gray-600 mt-2">Showing only unlocked capsules</p>
             </div>
 

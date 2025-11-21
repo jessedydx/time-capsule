@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Time Capsule",
+  title: "Time Capsules",
   description: "Store messages on-chain to be revealed in the future.",
 };
 
