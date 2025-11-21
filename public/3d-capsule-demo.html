@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Capsule Animation Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            font-size: 2.5rem;
+        }
+
+        .capsule-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .capsule-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            perspective: 1000px;
+            transition: transform 0.3s ease;
+        }
+
+        .capsule-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .capsule-scene {
+            width: 100%;
+            height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transform-style: preserve-3d;
+        }
+
+        /* 3D Capsule */
+        .capsule {
+            width: 120px;
+            height: 200px;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Locked Capsule - Rotating */
+        .capsule.locked {
+            animation: float 3s ease-in-out infinite, rotate 10s linear infinite;
+        }
+
+        /* Unlocked Capsule - Pulsing */
+        .capsule.unlocked {
+            animation: float 3s ease-in-out infinite, pulse 2s ease-in-out infinite;
+        }
+
+        /* Opened Capsule - Split */
+        .capsule.opened .capsule-top {
+            animation: openTop 1s ease-out forwards;
+        }
+
+        .capsule.opened .capsule-bottom {
+            animation: openBottom 1s ease-out forwards;
+        }
+
+        .capsule-top, .capsule-bottom {
+            position: absolute;
+            width: 120px;
+            height: 100px;
+            border-radius: 60px 60px 0 0;
+            background: linear-gradient(135deg, #22d3ee, #0ea5e9);
+            box-shadow: 
+                inset 0 -5px 20px rgba(0, 0, 0, 0.3),
+                0 10px 30px rgba(34, 211, 238, 0.4);
+            transform-style: preserve-3d;
+        }
+
+        .capsule-bottom {
+            top: 100px;
+            border-radius: 0 0 60px 60px;
+            background: linear-gradient(135deg, #0ea5e9, #06b6d4);
+        }
+
+        /* Lock Icon */
+        .lock-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            z-index: 10;
+        }
+
+        .locked .lock-icon {
+            animation: shake 0.5s ease-in-out infinite;
+        }
+
+        .unlocked .lock-icon {
+            animation: bounce 1s ease-in-out infinite;
+        }
+
+        /* Glow Effect */
+        .glow {
+            position: absolute;
+            width: 140px;
+            height: 220px;
+            top: -10px;
+            left: -10px;
+            border-radius: 70px;
+            background: radial-gradient(circle, rgba(34, 211, 238, 0.4), transparent);
+            animation: glow 2s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .locked .glow {
+            background: radial-gradient(circle, rgba(239, 68, 68, 0.4), transparent);
+        }
+
+        .unlocked .glow {
+            background: radial-gradient(circle, rgba(34, 197, 94, 0.4), transparent);
+        }
+
+        /* Sparkles */
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            animation: sparkle 2s ease-in-out infinite;
+        }
+
+        .sparkle:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
+        .sparkle:nth-child(2) { top: 40%; right: 10%; animation-delay: 0.5s; }
+        .sparkle:nth-child(3) { bottom: 30%; left: 15%; animation-delay: 1s; }
+        .sparkle:nth-child(4) { top: 60%; right: 20%; animation-delay: 1.5s; }
+
+        /* Badge */
+        .badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.875rem;
+            margin-bottom: 15px;
+        }
+
+        .badge.locked {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .badge.unlocked {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        /* Info */
+        .info {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .info h3 {
+            color: #1f2937;
+            margin-bottom: 8px;
+        }
+
+        .info p {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        /* Button */
+        .reveal-btn {
+            width: 100%;
+            padding: 12px;
+            margin-top: 15px;
+            background: black;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .reveal-btn:hover {
+            background: #374151;
+            transform: scale(1.05);
+        }
+
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotateX(0deg); }
+            50% { transform: translateY(-20px) rotateX(5deg); }
+        }
+
+        @keyframes rotate {
+            from { transform: rotateY(0deg); }
+            to { transform: rotateY(360deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translate(-50%, -50%) rotate(0deg); }
+            25% { transform: translate(-50%, -50%) rotate(-5deg); }
+            75% { transform: translate(-50%, -50%) rotate(5deg); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translate(-50%, -50%) translateY(0); }
+            50% { transform: translate(-50%, -50%) translateY(-10px); }
+        }
+
+        @keyframes glow {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.1); }
+        }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: scale(0); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes openTop {
+            to { 
+                transform: translateY(-50px) rotateX(-30deg);
+                opacity: 0.8;
+            }
+        }
+
+        @keyframes openBottom {
+            to { 
+                transform: translateY(50px) rotateX(30deg);
+                opacity: 0.8;
+            }
+        }
+
+        /* Message reveal */
+        .message {
+            text-align: center;
+            padding: 20px;
+            background: #f0f9ff;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-style: italic;
+            color: #0369a1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 3D Time Capsule Animations</h1>
+        
+        <div class="capsule-grid">
+            <!-- Locked Capsule -->
+            <div class="capsule-card">
+                <span class="badge locked">🔒 LOCKED</span>
+                <div class="capsule-scene">
+                    <div class="capsule locked">
+                        <div class="glow"></div>
+                        <div class="capsule-top"></div>
+                        <div class="capsule-bottom"></div>
+                        <div class="lock-icon">🔒</div>
+                        <div class="sparkle"></div>
+                        <div class="sparkle"></div>
+                        <div class="sparkle"></div>
+                        <div class="sparkle"></div>
+                    </div>
+                </div>
+                <div class="info">
+                    <h3>Locked Capsule</h3>
+                    <p>Rotating animation with glow effect</p>
+                    <p style="margin-top: 8px;"><strong>Unlock Time:</strong> Dec 25, 2025</p>
+                </div>
+            </div>
+
+            <!-- Unlocked Capsule -->
+            <div class="capsule-card">
+                <span class="badge unlocked">✅ UNLOCKED</span>
+                <div class="capsule-scene">
+                    <div class="capsule unlocked">
+                        <div class="glow"></div>
+                        <div class="capsule-top"></div>
+                        <div class="capsule-bottom"></div>
+                        <div class="lock-icon">🔓</div>
+                        <div class="sparkle"></div>
+                        <div class="sparkle"></div>
+                        <div class="sparkle"></div>
+                        <div class="sparkle"></div>
+                    </div>
+                </div>
+                <div class="info">
+                    <h3>Ready to Unlock</h3>
+                    <p>Pulsing animation with bounce effect</p>
+                    <button class="reveal-btn" onclick="openCapsule(this)">🔓 Click to Reveal</button>
+                </div>
+            </div>
+
+            <!-- Opened Capsule -->
+            <div class="capsule-card">
+                <span class="badge unlocked">✨ OPENED</span>
+                <div class="capsule-scene">
+                    <div class="capsule opened">
+                        <div class="glow"></div>
+                        <div class="capsule-top"></div>
+                        <div class="capsule-bottom"></div>
+                        <div class="lock-icon">✨</div>
+                    </div>
+                </div>
+                <div class="info">
+                    <h3>Opened Capsule</h3>
+                    <p>Split animation revealing content</p>
+                    <div class="message">
+                        "Hello from the past! This is your time capsule message from 2024."
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openCapsule(button) {
+            const card = button.closest('.capsule-card');
+            const capsule = card.querySelector('.capsule');
+            const badge = card.querySelector('.badge');
+            const info = card.querySelector('.info');
+            
+            // Change to opened state
+            capsule.classList.remove('unlocked');
+            capsule.classList.add('opened');
+            badge.textContent = '✨ OPENED';
+            
+            // Update lock icon
+            setTimeout(() => {
+                const lockIcon = capsule.querySelector('.lock-icon');
+                lockIcon.textContent = '✨';
+            }, 500);
+            
+            // Show message
+            setTimeout(() => {
+                button.style.display = 'none';
+                const message = document.createElement('div');
+                message.className = 'message';
+                message.textContent = '"This is your secret time capsule message! 🎉"';
+                message.style.opacity = '0';
+                info.appendChild(message);
+                
+                setTimeout(() => {
+                    message.style.transition = 'opacity 1s ease';
+                    message.style.opacity = '1';
+                }, 100);
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
