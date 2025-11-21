@@ -12,7 +12,6 @@
         "imageUrl": "https://timecapsules.app/preview.png",
         "buttonTitle": "Open Time Capsule",
         "splashImageUrl": "https://timecapsules.app/splash.png",
-        "splashBackgroundColor": "#ffffff",
-        "webhookUrl": "https://timecapsules.app/api/webhook"
+        "splashBackgroundColor": "#ffffff"
     }
 }
