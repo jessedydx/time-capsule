@@ -53,31 +53,45 @@ export default function CreateCapsule() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!message || !unlockDate) return;
+        console.log('Submit triggered');
+
+        if (!message) {
+            alert('Please enter a message');
+            return;
+        }
+        if (!unlockDate) {
+            alert('Please select an unlock date');
+            return;
+        }
 
         if (!isPublic && recipients.length === 0) {
             setRecipientError('Private capsules must have at least one recipient');
+            alert('Private capsules must have at least one recipient');
             return;
         }
 
         const timestamp = Math.floor(new Date(unlockDate).getTime() / 1000);
+        console.log('Timestamp:', timestamp);
 
         try {
             setIsEncrypting(true);
+            console.log('Starting encryption...');
             const { lit } = await import('../../utils/lit');
             const encryptedData = await lit.encrypt(message, timestamp, recipients, isPublic);
+            console.log('Encryption successful');
 
             const messageToSend = JSON.stringify(encryptedData);
 
+            console.log('Writing to contract...');
             writeContract({
                 address: CONTRACT_ADDRESS as `0x${string}`,
                 abi: TimeCapsuleArtifact.abi as any,
                 functionName: 'createCapsule',
-                args: [messageToSend, BigInt(timestamp), recipients, isPublic],
+                args: [messageToSend, BigInt(timestamp)],
             });
         } catch (error) {
-            console.error('Encryption failed:', error);
-            alert('Failed to encrypt message. Please try again.');
+            console.error('Encryption or Contract call failed:', error);
+            alert('Failed to create capsule. Check console for details.');
         } finally {
             setIsEncrypting(false);
         }
