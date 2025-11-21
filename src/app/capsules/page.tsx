@@ -118,7 +118,7 @@ export default function ViewCapsules() {
                 <button
                     onClick={() => setTab('created')}
                     className={`px-6 py-3 rounded-lg font-medium transition-all ${tab === 'created'
-                        ? 'bg-blue-600 text-white'
+                        ? 'bg-black text-white'
                         : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-100'
                         }`}
                 >
@@ -127,7 +127,7 @@ export default function ViewCapsules() {
                 <button
                     onClick={() => setTab('received')}
                     className={`px-6 py-3 rounded-lg font-medium transition-all ${tab === 'received'
-                        ? 'bg-purple-600 text-white'
+                        ? 'bg-black text-white'
                         : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-100'
                         }`}
                 >

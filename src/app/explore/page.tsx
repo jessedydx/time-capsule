@@ -87,13 +87,13 @@ export default function ExploreCapsules() {
             <div className="flex gap-4">
                 <button
                     onClick={() => setFilter('all')}
-                    className={`px-4 py-2 rounded-lg transition-colors ${filter === 'all' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-100'}`}
+                    className={`px-4 py-2 rounded-lg transition-colors ${filter === 'all' ? 'bg-black text-white' : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-100'}`}
                 >
                     All ({unlockedCapsules.length})
                 </button>
                 <button
                     onClick={() => setFilter('public')}
-                    className={`px-4 py-2 rounded-lg transition-colors ${filter === 'public' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-100'}`}
+                    className={`px-4 py-2 rounded-lg transition-colors ${filter === 'public' ? 'bg-black text-white' : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-100'}`}
                 >
                     🌍 Public ({publicCount})
                 </button>
@@ -158,7 +158,7 @@ export default function ExploreCapsules() {
                                                 <button
                                                     onClick={() => handleDecrypt(index, capsule.message)}
                                                     disabled={isDecrypting[index]}
-                                                    className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-2 px-4 rounded-full transition-all disabled:opacity-50"
+                                                    className="bg-black hover:bg-gray-800 text-white text-xs font-bold py-2 px-4 rounded-full transition-all disabled:opacity-50"
                                                 >
                                                     {isDecrypting[index] ? '⚡ Decrypting...' : '🔥 Decrypt'}
                                                 </button>

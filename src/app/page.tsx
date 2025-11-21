@@ -8,7 +8,9 @@ export default function Home() {
           Time Capsule
         </h1>
         <p className="text-base text-center sm:text-left max-w-2xl text-gray-700">
-          The internet forgets. Blockchain remembers. Lock a secret for the future you or someone special. Secured by smart contracts on Base.
+          <span className="font-semibold text-lg">The internet forgets. Blockchain remembers. Lock a secret for the future you or someone special. Secured by smart contracts on Base.</span>
+          <br />
+          Your message is encrypted and stored on-chain, remaining unreadable until the exact date you choose.
         </p>
 
         <div className="flex gap-4 items-center flex-col sm:flex-row">

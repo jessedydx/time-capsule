@@ -194,7 +194,7 @@ export default function CreateCapsule() {
                 <button
                     type="submit"
                     disabled={isPending || isEncrypting}
-                    className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded transition-colors disabled:opacity-50"
+                    className="bg-black hover:bg-gray-800 text-white font-bold py-3 px-6 rounded transition-colors disabled:opacity-50"
                 >
                     {isEncrypting ? 'Encrypting...' : isPending ? 'Creating...' : 'Seal Capsule'}
                 </button>
