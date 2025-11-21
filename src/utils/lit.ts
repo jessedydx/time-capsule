@@ -126,11 +126,11 @@ export class Lit {
             address: address,
         };
 
-        // Convert base64 string back to Uint8Array
-        const ciphertextUint8Array = Uint8Array.from(Buffer.from(ciphertext, 'base64'));
+        // Convert base64 string back to original ciphertext string
+        const originalCiphertext = Buffer.from(ciphertext, 'base64').toString();
 
         const decryptedData = await this.client.decrypt({
-            ciphertext: ciphertextUint8Array as any,
+            ciphertext: originalCiphertext,
             dataToEncryptHash,
             accessControlConditions,
             authSig,
