@@ -5,8 +5,8 @@ import { injected } from 'wagmi/connectors';
 
 export const farcasterWallet = (): Wallet => ({
     id: 'farcaster',
-    name: 'Farcaster',
-    iconUrl: 'https://farcaster.xyz/favicon.ico', // Temporary icon
+    name: 'Farcaster Wallet',
+    iconUrl: 'https://farcaster.xyz/favicon.ico',
     iconBackground: '#855DCD',
     downloadUrls: {
         android: 'https://play.google.com/store/apps/details?id=xyz.farcaster.mobile',
@@ -14,13 +14,26 @@ export const farcasterWallet = (): Wallet => ({
         mobile: 'https://warpcast.com',
         qrCode: 'https://warpcast.com',
     },
+    installed: async () => {
+        try {
+            // Only show as installed if we're in Farcaster context
+            const context = await sdk.context;
+            return !!context.user;
+        } catch {
+            return false;
+        }
+    },
     createConnector: (walletDetails) => {
         return createConnector((config) => ({
             ...injected({
-                target: (async () => {
-                    const provider = await sdk.wallet.ethProvider;
-                    return provider;
-                }) as any,
+                target: () => {
+                    // Return the Farcaster SDK provider directly
+                    return {
+                        id: 'farcaster',
+                        name: 'Farcaster Wallet',
+                        provider: sdk.wallet.ethProvider,
+                    };
+                },
             })(config),
             ...walletDetails,
         }));
