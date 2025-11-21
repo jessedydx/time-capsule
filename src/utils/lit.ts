@@ -22,6 +22,11 @@ export class Lit {
     async encrypt(message: string, unlockTime: number, recipients: string[] = [], isPublic: boolean = true) {
         await this.connect();
 
+        // Get current user address to ensure they can always decrypt their own capsule
+        // @ts-ignore
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        const creatorAddress = getAddress(accounts[0]);
+
         let accessControlConditions;
 
         if (isPublic) {
@@ -42,8 +47,13 @@ export class Lit {
             ];
         } else {
             // Private capsule: Time-based + Recipient check
+
+            // Ensure creator is in the recipients list and all addresses are checksummed
+            const allRecipients = new Set([creatorAddress, ...recipients.map(r => getAddress(r))]);
+            const uniqueRecipients = Array.from(allRecipients);
+
             // Build OR conditions for all recipients
-            const recipientConditions = recipients.map((recipient, index) => ({
+            const recipientConditions = uniqueRecipients.map((recipient, index) => ({
                 conditionType: 'evmBasic',
                 contractAddress: '',
                 standardContractType: '',
@@ -52,7 +62,7 @@ export class Lit {
                 parameters: [':userAddress'],
                 returnValueTest: {
                     comparator: '=',
-                    value: recipient.toLowerCase(),
+                    value: recipient, // Checksummed address
                 },
             }));
 
