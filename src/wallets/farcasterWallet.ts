@@ -5,8 +5,8 @@ import { injected } from 'wagmi/connectors';
 
 export const farcasterWallet = (): Wallet => ({
     id: 'farcaster',
-    name: 'Farcaster Wallet',
-    iconUrl: 'https://farcaster.xyz/favicon.ico',
+    name: 'Farcaster',
+    iconUrl: 'https://farcaster.xyz/favicon.ico', // Temporary icon
     iconBackground: '#855DCD',
     downloadUrls: {
         android: 'https://play.google.com/store/apps/details?id=xyz.farcaster.mobile',
@@ -18,13 +18,8 @@ export const farcasterWallet = (): Wallet => ({
         return createConnector((config) => ({
             ...injected({
                 target: (async () => {
-                    try {
-                        const provider = await sdk.wallet.ethProvider;
-                        return provider;
-                    } catch (error) {
-                        console.error('Failed to get Farcaster eth provider:', error);
-                        return undefined;
-                    }
+                    const provider = await sdk.wallet.ethProvider;
+                    return provider;
                 }) as any,
             })(config),
             ...walletDetails,
