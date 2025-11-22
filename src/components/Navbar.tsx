@@ -14,11 +14,10 @@ export function Navbar() {
     const { disconnect } = useDisconnect();
     const [connecting, setConnecting] = useState(false);
 
+    const [hasAttemptedAutoConnect, setHasAttemptedAutoConnect] = useState(false);
+
     const handleFarcasterConnect = useCallback(async () => {
-        if (connecting) {
-            console.log('Already connecting, skipping...');
-            return;
-        }
+        if (connecting) return;
         setConnecting(true);
 
         try {
@@ -31,15 +30,9 @@ export function Navbar() {
                 console.log('✅ Connected successfully to Farcaster wallet');
             } else {
                 console.error('Farcaster connector not found in Wagmi config');
-                console.log('Available connectors:', connectors.map(c => ({ id: c.id, name: c.name })));
             }
         } catch (error) {
             console.error('❌ Farcaster connection error:', error);
-            console.error('Error details:', {
-                message: error instanceof Error ? error.message : 'Unknown error',
-                stack: error instanceof Error ? error.stack : undefined,
-                error
-            });
         } finally {
             setConnecting(false);
         }
@@ -47,12 +40,12 @@ export function Navbar() {
 
     // Auto-connect in Farcaster context
     useEffect(() => {
-        console.log('Auto-connect check:', { isSDKLoaded, isConnected, connecting });
-        if (isSDKLoaded && !isConnected && !connecting) {
+        if (isSDKLoaded && !isConnected && !connecting && !hasAttemptedAutoConnect) {
             console.log('Triggering auto-connect in Farcaster miniapp...');
+            setHasAttemptedAutoConnect(true);
             handleFarcasterConnect();
         }
-    }, [isSDKLoaded, isConnected, connecting, handleFarcasterConnect]);
+    }, [isSDKLoaded, isConnected, connecting, hasAttemptedAutoConnect, handleFarcasterConnect]);
 
     return (
         <nav className="flex items-center justify-between p-4 border-b border-gray-200 bg-gray-100 fixed top-0 w-full z-10">
