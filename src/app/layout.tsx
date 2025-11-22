@@ -53,7 +53,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black text-white min-h-screen pt-16`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black text-white min-h-screen pt-[140px]`}
       >
         <Providers>
           <FarcasterProvider>

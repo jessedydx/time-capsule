@@ -3,10 +3,17 @@
 import { useReadContract, useReadContracts, useAccount, useSignMessage } from 'wagmi';
 import TimeCapsuleArtifact from '../../abis/TimeCapsule.json';
 import { useState } from 'react';
+import { useAddressDisplay } from '../../utils/address';
 
 const CONTRACT_ADDRESS = '0x20deAfbfa1C824986E4bED5E9d0A9F345650F383';
 
 type FilterType = 'all' | 'public' | 'private';
+
+// Component to display address with ENS resolution
+function AddressDisplay({ address }: { address: string }) {
+    const displayName = useAddressDisplay(address);
+    return <>{displayName}</>;
+}
 
 export default function ExploreCapsules() {
     const { address } = useAccount();
@@ -216,14 +223,14 @@ Expiration Time: ${expirationTime}`;
 
                                 <div className="pt-4 border-t border-gray-300">
                                     <p className="text-xs text-gray-600">Creator</p>
-                                    <p className="text-sm font-mono text-gray-700 truncate">{capsule.creator}</p>
+                                    <p className="text-sm font-mono text-gray-700 truncate"><AddressDisplay address={capsule.creator} /></p>
 
                                     {!capsule.isPublic && capsule.recipients?.length > 0 && (
                                         <>
                                             <p className="text-xs text-gray-600 mt-3">Recipients ({capsule.recipients.length})</p>
                                             <div className="flex flex-col gap-1 mt-1">
                                                 {capsule.recipients.slice(0, 2).map((r: string, i: number) => (
-                                                    <p key={i} className="text-xs font-mono text-purple-600 truncate">{r}</p>
+                                                    <p key={i} className="text-xs font-mono text-purple-600 truncate"><AddressDisplay address={r} /></p>
                                                 ))}
                                                 {capsule.recipients.length > 2 && (
                                                     <p className="text-xs text-gray-600">+{capsule.recipients.length - 2} more</p>
