@@ -8,7 +8,7 @@ import {
     rainbowWallet,
 } from '@rainbow-me/rainbowkit/wallets';
 import { createConfig, http } from 'wagmi';
-import { base } from 'wagmi/chains';
+import { base, mainnet } from 'wagmi/chains';
 import { farcasterConnector } from '../wallets/FarcasterConnector';
 
 const projectId = 'f1a0f0d91349a9ef2b0c913fb0a17505';
@@ -67,9 +67,10 @@ const createWagmiConfig = () => {
         ];
 
     return createConfig({
-        chains: [base],
+        chains: [base, mainnet],
         transports: {
             [base.id]: http(),
+            [mainnet.id]: http(),
         },
         connectors: allConnectors,
         ssr: true,
