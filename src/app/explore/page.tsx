@@ -109,12 +109,8 @@ Expiration Time: ${expirationTime}`;
 
     const allCapsules = capsulesData?.map((result) => result.result).filter(Boolean) || [];
 
-    // HIDE TEST CAPSULES (IDs <= 12)
-    const MIN_CAPSULE_ID = 13;
-    const visibleCapsules = allCapsules.filter((c: any) => Number(c.id) >= MIN_CAPSULE_ID);
-
     // ONLY show unlocked capsules
-    const unlockedCapsules = visibleCapsules.filter((capsule: any) => {
+    const unlockedCapsules = allCapsules.filter((capsule: any) => {
         const unlockTime = Number(capsule.unlockTime) * 1000;
         return Date.now() >= unlockTime;
     });
