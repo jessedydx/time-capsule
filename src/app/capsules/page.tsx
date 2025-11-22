@@ -153,8 +153,11 @@ Expiration Time: ${expirationTime}`;
     const rawCapsules = capsulesData?.map((result) => result.result) || [];
 
     // HIDE TEST CAPSULES (IDs <= 12)
+    // HIDE TEST CAPSULES (IDs <= 12)
     const MIN_CAPSULE_ID = 13;
-    const capsules = rawCapsules.filter((c: any) => c && Number(c.id) >= MIN_CAPSULE_ID);
+    const capsules = rawCapsules
+        .filter((c: any) => c && Number(c.id) >= MIN_CAPSULE_ID)
+        .sort((a: any, b: any) => Number(b.id) - Number(a.id));
 
     return (
         <div className="min-h-screen p-8 flex flex-col gap-8 items-center">

@@ -117,7 +117,7 @@ Expiration Time: ${expirationTime}`;
         if (filter === 'public') return capsule.isPublic;
         if (filter === 'private') return !capsule.isPublic;
         return true;
-    });
+    }).sort((a: any, b: any) => Number(b.id) - Number(a.id));
 
     const publicCount = unlockedCapsules.filter((c: any) => c.isPublic).length;
     const privateCount = unlockedCapsules.filter((c: any) => !c.isPublic).length;
