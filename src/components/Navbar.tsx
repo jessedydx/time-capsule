@@ -13,9 +13,6 @@ export function Navbar() {
     const { isConnected, address } = useAccount();
     const { disconnect } = useDisconnect();
     const [connecting, setConnecting] = useState(false);
-
-    const [hasAttemptedAutoConnect, setHasAttemptedAutoConnect] = useState(false);
-
     const handleFarcasterConnect = useCallback(async () => {
         if (connecting) return;
         setConnecting(true);
@@ -37,15 +34,6 @@ export function Navbar() {
             setConnecting(false);
         }
     }, [connecting, connectors, connect]);
-
-    // Auto-connect in Farcaster context
-    useEffect(() => {
-        if (isSDKLoaded && !isConnected && !connecting && !hasAttemptedAutoConnect) {
-            console.log('Triggering auto-connect in Farcaster miniapp...');
-            setHasAttemptedAutoConnect(true);
-            handleFarcasterConnect();
-        }
-    }, [isSDKLoaded, isConnected, connecting, hasAttemptedAutoConnect, handleFarcasterConnect]);
 
     return (
         <nav className="flex items-center justify-between p-4 border-b border-gray-200 bg-gray-100 fixed top-0 w-full z-10">
