@@ -8,6 +8,9 @@ import {
     metaMaskWallet,
     rainbowWallet,
 } from '@rainbow-me/rainbowkit/wallets';
+import { createConnector } from 'wagmi';
+import { injected } from 'wagmi/connectors';
+import sdk from '@farcaster/frame-sdk';
 
 const { wallets } = getDefaultWallets();
 
@@ -32,3 +35,24 @@ export const config = getDefaultConfig({
         ...wallets.slice(1),
     ],
 });
+
+// Add custom Farcaster connector that won't show in RainbowKit modal
+// but can be used programmatically
+const farcasterConnector = createConnector((config) => ({
+    ...injected({
+        target: (async () => {
+            try {
+                const provider = await sdk.wallet.ethProvider;
+                return provider;
+            } catch (e) {
+                console.error('Error getting Farcaster provider:', e);
+                return undefined;
+            }
+        }) as any
+    })(config),
+    id: 'farcaster-custom',
+    name: 'Farcaster Direct',
+}));
+
+// Manually add the connector to the config
+(config.connectors as any).push(farcasterConnector);

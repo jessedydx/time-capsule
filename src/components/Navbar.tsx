@@ -26,22 +26,20 @@ export function Navbar() {
         setConnecting(true);
 
         try {
-            // Get provider from Farcaster SDK
-            const provider = await sdk.wallet.ethProvider;
-            if (!provider) {
-                console.error('No Farcaster provider found');
-                setConnecting(false);
-                return;
-            }
+            // Find our custom Farcaster connector
+            const farcasterConnector = connectors.find(c => c.id === 'farcaster-custom');
 
-            // Request accounts
-            const accounts = await provider.request({ method: 'eth_requestAccounts' });
-            console.log('Farcaster connected:', accounts[0]);
-
-            // Connect using injected connector with Farcaster provider
-            const injectedConnector = connectors.find(c => c.id === 'injected');
-            if (injectedConnector) {
-                await connect({ connector: injectedConnector });
+            if (farcasterConnector) {
+                console.log('Found Farcaster connector, connecting...');
+                await connect({ connector: farcasterConnector });
+            } else {
+                console.error('Farcaster connector not found in Wagmi config');
+                // Fallback: Try to find any injected connector if custom one fails
+                const injected = connectors.find(c => c.id === 'injected');
+                if (injected) {
+                    console.log('Falling back to generic injected connector');
+                    await connect({ connector: injected });
+                }
             }
         } catch (error) {
             console.error('Farcaster connection error:', error);
