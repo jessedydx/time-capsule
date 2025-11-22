@@ -27,18 +27,11 @@ export function Navbar() {
 
             if (farcasterConnector) {
                 console.log('Found Farcaster connector, connecting...');
-                const result = await connect({ connector: farcasterConnector });
-                console.log('✅ Connect result:', result);
-                console.log('✅ Connected successfully to:', result.accounts?.[0]);
+                await connect({ connector: farcasterConnector });
+                console.log('✅ Connected successfully to Farcaster wallet');
             } else {
                 console.error('Farcaster connector not found in Wagmi config');
                 console.log('Available connectors:', connectors.map(c => ({ id: c.id, name: c.name })));
-                // Fallback: Try to find any injected connector if custom one fails
-                const injected = connectors.find(c => c.id === 'injected');
-                if (injected) {
-                    console.log('Falling back to generic injected connector');
-                    await connect({ connector: injected });
-                }
             }
         } catch (error) {
             console.error('❌ Farcaster connection error:', error);
@@ -56,7 +49,7 @@ export function Navbar() {
     useEffect(() => {
         console.log('Auto-connect check:', { isSDKLoaded, isConnected, connecting });
         if (isSDKLoaded && !isConnected && !connecting) {
-            console.log('Triggering auto-connect...');
+            console.log('Triggering auto-connect in Farcaster miniapp...');
             handleFarcasterConnect();
         }
     }, [isSDKLoaded, isConnected, connecting, handleFarcasterConnect]);
