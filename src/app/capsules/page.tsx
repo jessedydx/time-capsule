@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { lit } from '../../utils/lit';
 import { useAddressDisplay } from '../../utils/address';
 
-const CONTRACT_ADDRESS = '0x20deAfbfa1C824986E4bED5E9d0A9F345650F383';
+const CONTRACT_ADDRESS = '0xa419fEb046998f946A70b81E4b13f90d4D4aE69e';
 
 interface DecryptedMessage {
     [capsuleId: string]: string;

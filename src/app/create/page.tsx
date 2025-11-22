@@ -5,7 +5,7 @@ import { useWriteContract, useAccount } from 'wagmi';
 import { isAddress } from 'viem';
 import TimeCapsuleArtifact from '../../abis/TimeCapsule.json';
 
-const CONTRACT_ADDRESS = '0x20deAfbfa1C824986E4bED5E9d0A9F345650F383';
+const CONTRACT_ADDRESS = '0xa419fEb046998f946A70b81E4b13f90d4D4aE69e';
 const MAX_RECIPIENTS = 5;
 
 export default function CreateCapsule() {
