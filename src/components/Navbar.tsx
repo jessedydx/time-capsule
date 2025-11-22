@@ -38,7 +38,7 @@ export function Navbar() {
     return (
         <nav className="flex items-center justify-between p-4 border-b border-gray-200 bg-gray-100 fixed top-0 w-full z-10">
             <Link href="/" className="flex items-center">
-                <img src="/logo.png" alt="Time Capsules" className="h-12" />
+                <img src="/logo.png" alt="Time Capsules" className="h-[120px]" />
             </Link>
 
             <div className="flex items-center gap-4">
