@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useFarcaster } from './FarcasterProvider';
 import { useConnect, useAccount, useDisconnect } from 'wagmi';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import sdk from '@farcaster/frame-sdk';
 
 export function Navbar() {
@@ -14,15 +14,11 @@ export function Navbar() {
     const { disconnect } = useDisconnect();
     const [connecting, setConnecting] = useState(false);
 
-    // Auto-connect in Farcaster context
-    useEffect(() => {
-        if (isSDKLoaded && !isConnected && !connecting) {
-            handleFarcasterConnect();
+    const handleFarcasterConnect = useCallback(async () => {
+        if (connecting) {
+            console.log('Already connecting, skipping...');
+            return;
         }
-    }, [isSDKLoaded, isConnected]);
-
-    const handleFarcasterConnect = async () => {
-        if (connecting) return;
         setConnecting(true);
 
         try {
@@ -31,9 +27,12 @@ export function Navbar() {
 
             if (farcasterConnector) {
                 console.log('Found Farcaster connector, connecting...');
-                await connect({ connector: farcasterConnector });
+                const result = await connect({ connector: farcasterConnector });
+                console.log('✅ Connect result:', result);
+                console.log('✅ Connected successfully to:', result.accounts?.[0]);
             } else {
                 console.error('Farcaster connector not found in Wagmi config');
+                console.log('Available connectors:', connectors.map(c => ({ id: c.id, name: c.name })));
                 // Fallback: Try to find any injected connector if custom one fails
                 const injected = connectors.find(c => c.id === 'injected');
                 if (injected) {
@@ -42,11 +41,25 @@ export function Navbar() {
                 }
             }
         } catch (error) {
-            console.error('Farcaster connection error:', error);
+            console.error('❌ Farcaster connection error:', error);
+            console.error('Error details:', {
+                message: error instanceof Error ? error.message : 'Unknown error',
+                stack: error instanceof Error ? error.stack : undefined,
+                error
+            });
         } finally {
             setConnecting(false);
         }
-    };
+    }, [connecting, connectors, connect]);
+
+    // Auto-connect in Farcaster context
+    useEffect(() => {
+        console.log('Auto-connect check:', { isSDKLoaded, isConnected, connecting });
+        if (isSDKLoaded && !isConnected && !connecting) {
+            console.log('Triggering auto-connect...');
+            handleFarcasterConnect();
+        }
+    }, [isSDKLoaded, isConnected, connecting, handleFarcasterConnect]);
 
     return (
         <nav className="flex items-center justify-between p-4 border-b border-gray-200 bg-gray-100 fixed top-0 w-full z-10">
