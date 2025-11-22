@@ -4,7 +4,11 @@ import {
     argentWallet,
     trustWallet,
     ledgerWallet,
+    coinbaseWallet,
+    metaMaskWallet,
+    rainbowWallet,
 } from '@rainbow-me/rainbowkit/wallets';
+import { farcasterWallet } from '../wallets/farcasterWallet';
 
 const { wallets } = getDefaultWallets();
 
@@ -16,7 +20,16 @@ export const config = getDefaultConfig({
     wallets: [
         {
             groupName: 'Recommended',
-            wallets: [...wallets[0].wallets, argentWallet, trustWallet, ledgerWallet],
+            wallets: [
+                farcasterWallet,
+                coinbaseWallet,
+                rainbowWallet,
+                metaMaskWallet,
+                ...wallets[0].wallets,
+                argentWallet,
+                trustWallet,
+                ledgerWallet
+            ],
         },
         ...wallets.slice(1),
     ],
