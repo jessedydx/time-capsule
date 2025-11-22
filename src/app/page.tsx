@@ -33,7 +33,7 @@ export default function Home() {
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <h1 className="text-5xl font-bold text-center sm:text-left bg-gradient-to-r from-cyan-400 to-teal-400 bg-clip-text text-transparent">
+        <h1 className="text-5xl font-bold text-center sm:text-left bg-gradient-to-r from-cyan-300 to-blue-400 bg-clip-text text-transparent">
           Time Capsules
         </h1>
         <p className="text-base text-center sm:text-left max-w-2xl text-gray-700">
@@ -59,7 +59,7 @@ export default function Home() {
 
         {/* README Section */}
         <div className="mt-8 max-w-2xl w-full bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
-          <h2 className="text-2xl font-bold mb-4 bg-gradient-to-r from-cyan-400 to-teal-400 bg-clip-text text-transparent">
+          <h2 className="text-2xl font-bold mb-4 bg-gradient-to-r from-cyan-300 to-blue-400 bg-clip-text text-transparent">
             What is Time Capsules?
           </h2>
 

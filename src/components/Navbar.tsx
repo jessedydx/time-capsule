@@ -36,25 +36,25 @@ export function Navbar() {
     }, [connecting, connectors, connect]);
 
     return (
-        <nav className="flex items-center justify-between p-4 border-b border-gray-200 bg-gray-100 fixed top-0 w-full z-10">
+        <nav className="flex items-center justify-between p-4 border-b border-gray-700 bg-[#1a1d29] fixed top-0 w-full z-10 shadow-lg">
             <Link href="/" className="flex items-center">
-                <img src="/logo.png" alt="Time Capsules" className="h-[120px]" />
+                <img src="/logo.png" alt="Time Capsules" className="h-[120px] drop-shadow-[0_0_15px_rgba(100,200,255,0.3)]" />
             </Link>
 
             <div className="flex items-center gap-4">
-                <Link href="/create" className="text-sm text-gray-700 hover:text-gray-900 transition-colors">
+                <Link href="/create" className="text-sm text-white hover:text-gray-300 transition-colors font-medium">
                     Create
                 </Link>
-                <Link href="/explore" className="text-sm text-gray-700 hover:text-gray-900 transition-colors">
+                <Link href="/explore" className="text-sm text-white hover:text-gray-300 transition-colors font-medium">
                     Explore
                 </Link>
-                <Link href="/capsules" className="text-sm text-gray-700 hover:text-gray-900 transition-colors">
+                <Link href="/capsules" className="text-sm text-white hover:text-gray-300 transition-colors font-medium">
                     My Capsules
                 </Link>
 
                 {isSDKLoaded && fid && (
-                    <div className="hidden md:flex items-center gap-2 px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-medium">
-                        <span className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></span>
+                    <div className="hidden md:flex items-center gap-2 px-3 py-1 bg-gray-700 text-cyan-400 rounded-full text-xs font-medium border border-cyan-500/30">
+                        <span className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></span>
                         Farcaster ID: {fid}
                     </div>
                 )}
@@ -72,7 +72,7 @@ export function Navbar() {
                         <button
                             onClick={handleFarcasterConnect}
                             disabled={connecting}
-                            className="bg-purple-600 hover:bg-purple-700 disabled:bg-gray-400 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                            className="bg-black hover:bg-gray-800 disabled:bg-gray-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors border border-gray-700"
                         >
                             {connecting ? 'Connecting...' : 'Connect Wallet'}
                         </button>

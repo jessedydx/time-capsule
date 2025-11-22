@@ -21,11 +21,18 @@ import { config } from '../config/wagmi';
 
 const queryClient = new QueryClient();
 
+// Custom dark theme with black accents
+const customTheme = darkTheme({
+    accentColor: '#000000',
+    accentColorForeground: 'white',
+    borderRadius: 'medium',
+});
+
 export function Providers({ children }: { children: React.ReactNode }) {
     return (
         <WagmiProvider config={config}>
             <QueryClientProvider client={queryClient}>
-                <RainbowKitProvider theme={darkTheme()}>
+                <RainbowKitProvider theme={customTheme} locale="en">
                     {children}
                 </RainbowKitProvider>
             </QueryClientProvider>
