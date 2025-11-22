@@ -1,5 +1,4 @@
-import { getDefaultConfig, getDefaultWallets } from '@rainbow-me/rainbowkit';
-import { base } from 'wagmi/chains';
+import { connectorsForWallets } from '@rainbow-me/rainbowkit';
 import {
     argentWallet,
     trustWallet,
@@ -8,36 +7,34 @@ import {
     metaMaskWallet,
     rainbowWallet,
 } from '@rainbow-me/rainbowkit/wallets';
-import { createConnector } from 'wagmi';
+import { createConfig, http, createConnector } from 'wagmi';
+import { base } from 'wagmi/chains';
 import { injected } from 'wagmi/connectors';
 import sdk from '@farcaster/frame-sdk';
 
-const { wallets } = getDefaultWallets();
+const projectId = 'f1a0f0d91349a9ef2b0c913fb0a17505';
 
-export const config = getDefaultConfig({
-    appName: 'Time Capsules',
-    projectId: 'f1a0f0d91349a9ef2b0c913fb0a17505',
-    chains: [base],
-    ssr: true,
-    wallets: [
+const connectors = connectorsForWallets(
+    [
         {
             groupName: 'Recommended',
             wallets: [
                 coinbaseWallet,
                 rainbowWallet,
                 metaMaskWallet,
-                ...wallets[0].wallets,
                 argentWallet,
                 trustWallet,
                 ledgerWallet
             ],
         },
-        ...wallets.slice(1),
     ],
-});
+    {
+        appName: 'Time Capsules',
+        projectId,
+    }
+);
 
-// Add custom Farcaster connector that won't show in RainbowKit modal
-// but can be used programmatically
+// Custom Farcaster connector
 const farcasterConnector = createConnector((config) => ({
     ...injected({
         target: (async () => {
@@ -54,5 +51,14 @@ const farcasterConnector = createConnector((config) => ({
     name: 'Farcaster Direct',
 }));
 
-// Manually add the connector to the config
-(config.connectors as any).push(farcasterConnector);
+export const config = createConfig({
+    chains: [base],
+    transports: {
+        [base.id]: http(),
+    },
+    connectors: [
+        ...connectors,
+        farcasterConnector
+    ],
+    ssr: true,
+});
