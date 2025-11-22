@@ -1,6 +1,6 @@
 'use client';
 
-import { useAccount, useReadContract, useReadContracts } from 'wagmi';
+import { useAccount, useReadContract, useReadContracts, useSignMessage } from 'wagmi';
 import TimeCapsuleArtifact from '../../abis/TimeCapsule.json';
 import { useState } from 'react';
 import { lit } from '../../utils/lit';
@@ -55,6 +55,8 @@ export default function ViewCapsules() {
         }
     });
 
+    const { signMessageAsync } = useSignMessage();
+
     const handleDecrypt = async (capsule: any) => {
         const capsuleId = capsule.id.toString();
 
@@ -67,22 +69,47 @@ export default function ViewCapsules() {
         try {
             console.log('=== DECRYPTION DEBUG ===');
             console.log('Capsule ID:', capsuleId);
-            console.log('Capsule unlock time:', capsule.unlockTime);
-            console.log('Current time (seconds):', Math.floor(Date.now() / 1000));
-            console.log('Is locked?', Date.now() < Number(capsule.unlockTime) * 1000);
-            console.log('Raw message from contract:', capsule.message);
 
             const encryptedData = JSON.parse(capsule.message);
-            console.log('Parsed encrypted data:', encryptedData);
-            console.log('ciphertext type:', typeof encryptedData.ciphertext);
-            console.log('ciphertext length:', encryptedData.ciphertext?.length);
-            console.log('dataToEncryptHash:', encryptedData.dataToEncryptHash);
-            console.log('accessControlConditions:', encryptedData.accessControlConditions);
+
+            // Generate SIWE message for authSig
+            const domain = window.location.host;
+            const origin = window.location.origin;
+            const statement = "Sign this message to decrypt data with Lit Protocol";
+            const nonce = await lit.getLatestBlockhash();
+            const issuedAt = new Date().toISOString();
+            const expirationTime = new Date(Date.now() + 1000 * 60 * 60 * 24).toISOString(); // 24 hours
+            const version = "1";
+            const chainId = 8453; // Base mainnet
+
+            const messageToSign = `${domain} wants you to sign in with your Ethereum account:
+${address}
+
+${statement}
+
+URI: ${origin}
+Version: ${version}
+Chain ID: ${chainId}
+Nonce: ${nonce}
+Issued At: ${issuedAt}
+Expiration Time: ${expirationTime}`;
+
+            const signature = await signMessageAsync({
+                message: messageToSign,
+            });
+
+            const authSig = {
+                sig: signature,
+                derivedVia: 'web3.eth.personal.sign',
+                signedMessage: messageToSign,
+                address: address as string,
+            };
 
             const decryptedMessage = await lit.decrypt(
                 encryptedData.ciphertext,
                 encryptedData.dataToEncryptHash,
-                encryptedData.accessControlConditions
+                encryptedData.accessControlConditions,
+                authSig
             );
 
             console.log('Decrypted successfully:', decryptedMessage);
@@ -94,11 +121,9 @@ export default function ViewCapsules() {
         } catch (error) {
             console.error('=== DECRYPTION ERROR ===');
             console.error('Error details:', error);
-            console.error('Error message:', (error as Error).message);
-            console.error('Error stack:', (error as Error).stack);
             setDecryptedMessages(prev => ({
                 ...prev,
-                [capsuleId]: '[Failed to decrypt - may still be locked or invalid data]'
+                [capsuleId]: '[Failed to decrypt - check console]'
             }));
         } finally {
             setDecryptingIds(prev => {

@@ -1,6 +1,6 @@
 'use client';
 
-import { useReadContract, useReadContracts, useAccount } from 'wagmi';
+import { useReadContract, useReadContracts, useAccount, useSignMessage } from 'wagmi';
 import TimeCapsuleArtifact from '../../abis/TimeCapsule.json';
 import { useState } from 'react';
 
@@ -14,13 +14,54 @@ export default function ExploreCapsules() {
     const [decryptedMessages, setDecryptedMessages] = useState<Record<number, string>>({});
     const [isDecrypting, setIsDecrypting] = useState<Record<number, boolean>>({});
 
+    const { signMessageAsync } = useSignMessage();
+
     const handleDecrypt = async (index: number, messageJson: string) => {
         try {
             setIsDecrypting(prev => ({ ...prev, [index]: true }));
             const { ciphertext, dataToEncryptHash, accessControlConditions } = JSON.parse(messageJson);
 
             const { lit } = await import('../../utils/lit');
-            const decrypted = await lit.decrypt(ciphertext, dataToEncryptHash, accessControlConditions);
+
+            // Generate SIWE message for authSig
+            const domain = window.location.host;
+            const origin = window.location.origin;
+            const statement = "Sign this message to decrypt data with Lit Protocol";
+            const nonce = await lit.getLatestBlockhash();
+            const issuedAt = new Date().toISOString();
+            const expirationTime = new Date(Date.now() + 1000 * 60 * 60 * 24).toISOString(); // 24 hours
+            const version = "1";
+            const chainId = 8453; // Base mainnet
+
+            const messageToSign = `${domain} wants you to sign in with your Ethereum account:
+${address}
+
+${statement}
+
+URI: ${origin}
+Version: ${version}
+Chain ID: ${chainId}
+Nonce: ${nonce}
+Issued At: ${issuedAt}
+Expiration Time: ${expirationTime}`;
+
+            const signature = await signMessageAsync({
+                message: messageToSign,
+            });
+
+            const authSig = {
+                sig: signature,
+                derivedVia: 'web3.eth.personal.sign',
+                signedMessage: messageToSign,
+                address: address as string,
+            };
+
+            const decrypted = await lit.decrypt(
+                ciphertext,
+                dataToEncryptHash,
+                accessControlConditions,
+                authSig
+            );
 
             setDecryptedMessages(prev => ({ ...prev, [index]: decrypted }));
         } catch (error) {

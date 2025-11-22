@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useWriteContract } from 'wagmi';
+import { useWriteContract, useAccount } from 'wagmi';
 import { isAddress } from 'viem';
 import TimeCapsuleArtifact from '../../abis/TimeCapsule.json';
 
@@ -17,6 +17,7 @@ export default function CreateCapsule() {
     const [recipientError, setRecipientError] = useState('');
 
     const { writeContract, isPending, isSuccess } = useWriteContract();
+    const { address } = useAccount();
 
     const [isEncrypting, setIsEncrypting] = useState(false);
 
@@ -55,6 +56,11 @@ export default function CreateCapsule() {
         e.preventDefault();
         console.log('Submit triggered');
 
+        if (!address) {
+            alert('Please connect your wallet first');
+            return;
+        }
+
         if (!message) {
             alert('Please enter a message');
             return;
@@ -77,7 +83,8 @@ export default function CreateCapsule() {
             setIsEncrypting(true);
             console.log('Starting encryption...');
             const { lit } = await import('../../utils/lit');
-            const encryptedData = await lit.encrypt(message, timestamp, recipients, isPublic);
+            // Pass the connected address as the creator address
+            const encryptedData = await lit.encrypt(message, timestamp, recipients, isPublic, address);
             console.log('Encryption successful');
             console.log('encryptedData:', encryptedData);
 

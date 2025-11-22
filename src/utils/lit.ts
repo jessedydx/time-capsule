@@ -19,13 +19,22 @@ export class Lit {
         }
     }
 
-    async encrypt(message: string, unlockTime: number, recipients: string[] = [], isPublic: boolean = true) {
+    async getLatestBlockhash() {
+        await this.connect();
+        return this.client.getLatestBlockhash();
+    }
+
+    async encrypt(
+        message: string,
+        unlockTime: number,
+        recipients: string[] = [],
+        isPublic: boolean = true,
+        creatorAddress: string
+    ) {
         await this.connect();
 
-        // Get current user address to ensure they can always decrypt their own capsule
-        // @ts-ignore
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        const creatorAddress = getAddress(accounts[0]);
+        // Ensure creator address is checksummed
+        const checksummedCreator = getAddress(creatorAddress);
 
         let accessControlConditions;
 
@@ -49,7 +58,7 @@ export class Lit {
             // Private capsule: Time-based + Recipient check
 
             // Ensure creator is in the recipients list and all addresses are checksummed
-            const allRecipients = new Set([creatorAddress, ...recipients.map(r => getAddress(r))]);
+            const allRecipients = new Set([checksummedCreator, ...recipients.map(r => getAddress(r))]);
             const uniqueRecipients = Array.from(allRecipients);
 
             // Build OR conditions for all recipients
@@ -113,48 +122,13 @@ export class Lit {
         };
     }
 
-    async decrypt(ciphertext: string, dataToEncryptHash: string, accessControlConditions: any[]): Promise<string> {
+    async decrypt(
+        ciphertext: string,
+        dataToEncryptHash: string,
+        accessControlConditions: any[],
+        authSig: any
+    ): Promise<string> {
         await this.connect();
-
-        // Get authentication signature from MetaMask manually
-        // @ts-ignore - window.ethereum exists when MetaMask is installed
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        const address = getAddress(accounts[0]);
-
-        // Generate SIWE message
-        const domain = window.location.host;
-        const origin = window.location.origin;
-        const statement = "Sign this message to decrypt data with Lit Protocol";
-        const nonce = await this.client.getLatestBlockhash();
-        const issuedAt = new Date().toISOString();
-        const expirationTime = new Date(Date.now() + 1000 * 60 * 60 * 24).toISOString(); // 24 hours
-        const version = "1";
-        const chainId = 8453; // Base mainnet
-
-        const messageToSign = `${domain} wants you to sign in with your Ethereum account:
-${address}
-
-${statement}
-
-URI: ${origin}
-Version: ${version}
-Chain ID: ${chainId}
-Nonce: ${nonce}
-Issued At: ${issuedAt}
-Expiration Time: ${expirationTime}`;
-
-        // @ts-ignore
-        const signature = await window.ethereum.request({
-            method: 'personal_sign',
-            params: [messageToSign, address],
-        });
-
-        const authSig = {
-            sig: signature,
-            derivedVia: 'web3.eth.personal.sign',
-            signedMessage: messageToSign,
-            address: address,
-        };
 
         // Convert base64 string back to original ciphertext string
         const originalCiphertext = Buffer.from(ciphertext, 'base64').toString();
@@ -173,3 +147,4 @@ Expiration Time: ${expirationTime}`;
 }
 
 export const lit = new Lit();
+

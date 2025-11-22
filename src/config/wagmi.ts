@@ -1,6 +1,5 @@
 import { getDefaultConfig, getDefaultWallets } from '@rainbow-me/rainbowkit';
 import { base } from 'wagmi/chains';
-import { farcasterWallet } from '../wallets/farcasterWallet';
 import {
     argentWallet,
     trustWallet,
@@ -17,7 +16,7 @@ export const config = getDefaultConfig({
     wallets: [
         {
             groupName: 'Recommended',
-            wallets: [farcasterWallet, ...wallets[0].wallets],
+            wallets: [...wallets[0].wallets, argentWallet, trustWallet, ledgerWallet],
         },
         ...wallets.slice(1),
     ],

@@ -5,7 +5,7 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useFarcaster } from './FarcasterProvider';
 
 export function Navbar() {
-    const { isSDKLoaded } = useFarcaster();
+    const { isSDKLoaded, fid } = useFarcaster();
 
     return (
         <nav className="flex items-center justify-between p-4 border-b border-gray-200 bg-gray-100 fixed top-0 w-full z-10">
@@ -23,6 +23,13 @@ export function Navbar() {
                 <Link href="/capsules" className="text-sm text-gray-700 hover:text-gray-900 transition-colors">
                     My Capsules
                 </Link>
+
+                {isSDKLoaded && fid && (
+                    <div className="hidden md:flex items-center gap-2 px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-medium">
+                        <span className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></span>
+                        Farcaster ID: {fid}
+                    </div>
+                )}
 
                 {/* Show ConnectButton in both cases, but customize for Farcaster */}
                 <ConnectButton
