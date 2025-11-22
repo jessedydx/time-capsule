@@ -7,10 +7,9 @@ import {
     metaMaskWallet,
     rainbowWallet,
 } from '@rainbow-me/rainbowkit/wallets';
-import { createConfig, http, createConnector } from 'wagmi';
+import { createConfig, http } from 'wagmi';
 import { base } from 'wagmi/chains';
-import { injected } from 'wagmi/connectors';
-import sdk from '@farcaster/frame-sdk';
+import { farcasterConnector } from '../wallets/FarcasterConnector';
 
 const projectId = 'f1a0f0d91349a9ef2b0c913fb0a17505';
 
@@ -33,31 +32,17 @@ const isFarcasterMiniapp = (): boolean => {
     }
 };
 
-// Custom Farcaster connector
-const farcasterConnector = createConnector((config) => ({
-    ...injected({
-        target: (async () => {
-            try {
-                const provider = await sdk.wallet.ethProvider;
-                return provider;
-            } catch (e) {
-                console.error('Error getting Farcaster provider:', e);
-                return undefined;
-            }
-        }) as any
-    })(config),
-    id: 'farcaster-custom',
-    name: 'Farcaster Wallet',
-}));
-
 // Create config with conditional connectors
 const createWagmiConfig = () => {
     const inFarcasterMiniapp = isFarcasterMiniapp();
 
+    // Initialize custom connector
+    const farcaster = farcasterConnector();
+
     // In Farcaster miniapp: only use Farcaster connector
     // In regular web: include all Rainbow connectors
     const allConnectors = inFarcasterMiniapp
-        ? [farcasterConnector]
+        ? [farcaster]
         : [
             ...connectorsForWallets(
                 [
@@ -78,7 +63,7 @@ const createWagmiConfig = () => {
                     projectId,
                 }
             ),
-            farcasterConnector
+            farcaster
         ];
 
     return createConfig({
